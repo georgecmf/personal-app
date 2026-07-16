@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { signIn } from "../../services/auth";
+import { signUp } from "../../services/auth";
 
-function Login() {
+function Register() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin() {
+  async function handleRegister() {
     if (!email || !password) {
       alert("Preencha todos os campos.");
       return;
@@ -18,7 +18,7 @@ function Login() {
 
     setLoading(true);
 
-    const { error } = await signIn(email, password);
+    const { error } = await signUp(email, password);
 
     setLoading(false);
 
@@ -27,14 +27,16 @@ function Login() {
       return;
     }
 
-    navigate("/");
+    alert("Conta criada com sucesso!");
+
+    navigate("/login");
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950">
-      <div className="bg-slate-900 p-8 rounded-2xl w-full max-w-md border border-slate-800">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-md">
         <h1 className="text-4xl font-bold text-center mb-8">
-          FitPro
+          Criar conta
         </h1>
 
         <div className="flex flex-col gap-4">
@@ -55,16 +57,23 @@ function Login() {
           />
 
           <button
-            onClick={handleLogin}
+            onClick={handleRegister}
             disabled={loading}
-            className="bg-green-400 text-slate-950 font-bold p-4 rounded-xl hover:opacity-90 transition"
+            className="bg-green-400 text-slate-950 font-bold p-4 rounded-xl"
           >
-            {loading ? "Entrando..." : "Entrar"}
+            {loading ? "Criando..." : "Criar conta"}
           </button>
+
+          <Link
+            to="/login"
+            className="text-center text-green-400 hover:underline"
+          >
+            Já tenho uma conta
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Register;

@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-
-import {
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import NewStudentModal from "../../components/students/NewStudentModal";
 
+import { useAuth } from "../../hooks/useAuth";
 import {
   getStudents,
   createStudent,
@@ -22,69 +19,61 @@ type Student = {
 };
 
 function Students() {
-  const [openModal, setOpenModal] =
-    useState(false);
+  const { user } = useAuth();
+  const [openModal, setOpenModal] = useState(false);
 
   const [editingStudent, setEditingStudent] =
     useState<Student | null>(null);
 
-  const [students, setStudents] =
-    useState<Student[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+
+  async function loadStudents() {
+  console.log("USER:", user);
+
+  if (!user) return;
+
+  const data = await getStudents(user.id);
+
+  console.log("ALUNOS:", data);
+
+  setStudents(data || []);
+}
 
   useEffect(() => {
-    async function fetchStudents() {
-      const data =
-        await getStudents();
-
-      setStudents(data || []);
+    if (user) {
+    loadStudents();
     }
+  }, [user]);
 
-    fetchStudents();
-  }, []);
-
-  async function addStudent(
-  student: Student
-) {
-  if (editingStudent) {
-    await updateStudent(
-      editingStudent.id,
-      {
+  async function addStudent(student: Student) {
+    if (editingStudent) {
+      await updateStudent(editingStudent.id, {
         name: student.name,
         goal: student.goal,
         plan: student.plan,
-      }
-    );
-  } else {
-    await createStudent({
-      name: student.name,
-      goal: student.goal,
-      plan: student.plan,
-    });
+      });
+    } else {
+      await createStudent({
+        name: student.name,
+        goal: student.goal,
+        plan: student.plan,
+        user_id: user?.id,
+      });
+    }
+
+    await loadStudents();
+
+    setEditingStudent(null);
+    setOpenModal(false);
   }
 
-  const data =
-    await getStudents();
-
-  setStudents(data || []);
-
-  setEditingStudent(null);
-}
-  async function deleteStudent(
-    id: number
-  ) {
+  async function deleteStudent(id: number) {
     await deleteStudentService(id);
-
-    const data =
-      await getStudents();
-
-    setStudents(data || []);
+    await loadStudents();
   }
 
-  function handleEditStudent(
-    student: Student
-  ) {
+  function handleEditStudent(student: Student) {
     setEditingStudent(student);
-
     setOpenModal(true);
   }
 
@@ -104,89 +93,72 @@ function Students() {
         <button
           onClick={() => {
             setEditingStudent(null);
-
             setOpenModal(true);
           }}
           className="flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
         >
           <Plus size={20} />
-
           Novo aluno
         </button>
       </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <p className="mb-4">
+  Total de alunos: {students.length}
+</p>
         <table className="w-full">
           <thead className="bg-slate-800">
             <tr>
-              <th className="text-left p-5">
-                Nome
-              </th>
-
-              <th className="text-left p-5">
-                Objetivo
-              </th>
-
-              <th className="text-left p-5">
-                Plano
-              </th>
-
-              <th className="text-left p-5">
-                Ações
-              </th>
+              <th className="text-left p-5">Nome</th>
+              <th className="text-left p-5">Objetivo</th>
+              <th className="text-left p-5">Plano</th>
+              <th className="text-left p-5">Ações</th>
             </tr>
           </thead>
 
           <tbody>
-            {students.map((student) => (
-              <tr
-                key={student.id}
-                className="border-t border-slate-800 hover:bg-slate-800/40 transition"
-              >
-                <td
-                  onClick={() =>
-                    handleEditStudent(
-                      student
-                    )
-                  }
-                  className="p-5 cursor-pointer hover:text-green-400"
-                >
-                  {student.name}
-                </td>
+  {students.map((student) => (
+    <tr
+      key={student.id}
+      className="border-t border-slate-800 hover:bg-slate-800/40 transition"
+    >
+      <td
+        className="p-5 cursor-pointer hover:text-green-400"
+        onClick={() => handleEditStudent(student)}
+      >
+        {student.name}
+      </td>
 
-                <td className="p-5 text-slate-400">
-                  {student.goal}
-                </td>
+      <td className="p-5 text-slate-400">
+        {student.goal}
+      </td>
 
-                <td className="p-5">
-                  <span className="bg-green-400/20 text-green-400 px-3 py-1 rounded-lg text-sm">
-                    {student.plan}
-                  </span>
-                </td>
+      <td className="p-5">
+        <span className="bg-green-400/20 text-green-400 px-3 py-1 rounded-lg text-sm">
+          {student.plan}
+        </span>
+      </td>
 
-                <td className="p-5">
-                  <button
-                    onClick={() =>
-                      deleteStudent(
-                        student.id
-                      )
-                    }
-                    className="text-red-400 hover:text-red-300 transition"
-                  >
-                    <Trash2 size={20} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+      <td className="p-5">
+        <button
+          onClick={() => deleteStudent(student.id)}
+          className="text-red-400 hover:text-red-300 transition"
+        >
+          <Trash2 size={20} />
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
       </div>
 
       <NewStudentModal
         open={openModal}
-        onClose={() =>
-          setOpenModal(false)
-        }
+        onClose={() => {
+          setOpenModal(false);
+          setEditingStudent(null);
+        }}
         onAddStudent={addStudent}
         editingStudent={editingStudent}
       />
@@ -195,3 +167,12 @@ function Students() {
 }
 
 export default Students;
+{/* <NewStudentModal
+  open={openModal}
+  onClose={() => {
+    setOpenModal(false);
+    setEditingStudent(null);
+  }}
+  onAddStudent={addStudent}
+  editingStudent={editingStudent}
+/> */}

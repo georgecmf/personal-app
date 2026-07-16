@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Student = {
   id: number;
@@ -10,9 +10,7 @@ type Student = {
 type Props = {
   open: boolean;
   onClose: () => void;
-
-  onAddStudent: (student: Student) => void;
-
+  onAddStudent: (student: Student) => Promise<void>;
   editingStudent: Student | null;
 };
 
@@ -22,57 +20,53 @@ function NewStudentModal({
   onAddStudent,
   editingStudent,
 }: Props) {
-  const [name, setName] = useState(
-    editingStudent?.name || ""
-  );
+  const [name, setName] = useState("");
+  const [goal, setGoal] = useState("");
+  const [plan, setPlan] = useState("Basic");
 
-  const [goal, setGoal] = useState(
-    editingStudent?.goal || ""
-  );
+  useEffect(() => {
+    if (!open) return;
 
-  const [plan, setPlan] = useState(
-    editingStudent?.plan || "Basic"
-  );
+    if (editingStudent) {
+      setName(editingStudent.name);
+      setGoal(editingStudent.goal);
+      setPlan(editingStudent.plan);
+    } else {
+      setName("");
+      setGoal("");
+      setPlan("Basic");
+    }
+  }, [open, editingStudent]);
 
-  if (!open) return null;
+  async function handleSaveStudent() {
+    if (!name.trim() || !goal.trim()) {
+      alert("Preencha o nome e o objetivo.");
+      return;
+    }
 
-  function handleSaveStudent() {
-    if (!name || !goal) return;
-
-    const student = {
-      id: editingStudent
-        ? editingStudent.id
-        : Date.now(),
-
+    await onAddStudent({
+      id: editingStudent?.id ?? 0,
       name,
       goal,
       plan,
-    };
-
-    onAddStudent(student);
-
-    setName("");
-    setGoal("");
-    setPlan("Basic");
-
-    onClose();
+    });
   }
+
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-lg">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-bold">
-            {editingStudent
-              ? "Editar aluno"
-              : "Novo aluno"}
+            {editingStudent ? "Editar aluno" : "Novo aluno"}
           </h2>
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white"
+            className="text-slate-400 hover:text-white text-xl"
           >
-            X
+            ✕
           </button>
         </div>
 
@@ -81,9 +75,7 @@ function NewStudentModal({
             type="text"
             placeholder="Nome do aluno"
             value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
+            onChange={(e) => setName(e.target.value)}
             className="bg-slate-800 p-4 rounded-xl outline-none"
           />
 
@@ -91,30 +83,24 @@ function NewStudentModal({
             type="text"
             placeholder="Objetivo"
             value={goal}
-            onChange={(e) =>
-              setGoal(e.target.value)
-            }
+            onChange={(e) => setGoal(e.target.value)}
             className="bg-slate-800 p-4 rounded-xl outline-none"
           />
 
           <select
             value={plan}
-            onChange={(e) =>
-              setPlan(e.target.value)
-            }
+            onChange={(e) => setPlan(e.target.value)}
             className="bg-slate-800 p-4 rounded-xl outline-none"
           >
-            <option>Basic</option>
-            <option>Premium</option>
+            <option value="Basic">Basic</option>
+            <option value="Premium">Premium</option>
           </select>
 
           <button
             onClick={handleSaveStudent}
             className="bg-green-400 text-slate-950 font-bold p-4 rounded-xl hover:opacity-90 transition"
           >
-            {editingStudent
-              ? "Salvar alterações"
-              : "Salvar aluno"}
+            {editingStudent ? "Salvar alterações" : "Salvar aluno"}
           </button>
         </div>
       </div>
