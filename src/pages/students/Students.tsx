@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ClipboardList } from "lucide-react";
 
 import NewStudentModal from "../../components/students/NewStudentModal";
-
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import {
   getStudents,
@@ -20,6 +20,7 @@ type Student = {
 
 function Students() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
 
   const [editingStudent, setEditingStudent] =
@@ -140,13 +141,34 @@ function Students() {
       </td>
 
       <td className="p-5">
-        <button
-          onClick={() => deleteStudent(student.id)}
-          className="text-red-400 hover:text-red-300 transition"
-        >
-          <Trash2 size={20} />
-        </button>
-      </td>
+  <div className="flex items-center gap-4">
+    <button
+      onClick={() => handleEditStudent(student)}
+      className="text-blue-400 hover:text-blue-300 transition"
+      title="Editar aluno"
+    >
+      ✏️
+    </button>
+
+    <button
+  onClick={() =>
+    navigate(`/students/${student.id}/workouts`)
+  }
+  className="text-green-400 hover:text-green-300 transition"
+  title="Treinos"
+>
+  <ClipboardList size={20} />
+</button>
+
+    <button
+      onClick={() => deleteStudent(student.id)}
+      className="text-red-400 hover:text-red-300 transition"
+      title="Excluir aluno"
+    >
+      <Trash2 size={20} />
+    </button>
+  </div>
+</td>
     </tr>
   ))}
 </tbody>
@@ -167,12 +189,3 @@ function Students() {
 }
 
 export default Students;
-{/* <NewStudentModal
-  open={openModal}
-  onClose={() => {
-    setOpenModal(false);
-    setEditingStudent(null);
-  }}
-  onAddStudent={addStudent}
-  editingStudent={editingStudent}
-/> */}

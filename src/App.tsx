@@ -12,7 +12,7 @@ import Students from "./pages/students/Students";
 import Workouts from "./pages/workouts/Workouts";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
-
+import StudentWorkouts from "./pages/workouts/StudentWorkouts";
 import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
@@ -37,16 +37,20 @@ function App() {
             path="/"
             element={<Dashboard />}
           />
+<Route
+  path="/students"
+  element={<Students />}
+/>
 
-          <Route
-            path="/students"
-            element={<Students />}
-          />
+<Route
+  path="/students/:studentId/workouts"
+  element={<StudentWorkouts />}
+/>
 
-          <Route
-            path="/workouts"
-            element={<Workouts />}
-          />
+<Route
+  path="/workouts"
+  element={<Workouts />}
+/>
         </Route>
 
         <Route
