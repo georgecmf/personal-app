@@ -14,6 +14,7 @@ import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import StudentWorkouts from "./pages/workouts/StudentWorkouts";
 import PrivateRoute from "./routes/PrivateRoute";
+import WorkoutExercises from "./pages/workouts/WorkoutExercises";
 
 function App() {
   return (
@@ -48,9 +49,14 @@ function App() {
 />
 
 <Route
-  path="/workouts"
-  element={<Workouts />}
+  path="/students/:studentId/workouts/:workoutId"
+  element={<WorkoutExercises />}
 />
+
+    <Route
+      path="/workouts"
+      element={<Workouts />}
+    />
         </Route>
 
         <Route

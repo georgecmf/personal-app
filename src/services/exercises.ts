@@ -1,20 +1,25 @@
 import { supabase } from "./supabase";
 
-export interface Workout {
+export interface Exercise {
   id?: number;
   name: string;
-  student_id: number;
+  workout_id: number;
+  series: number;
+  reps: string;
+  weight: string;
+  rest: string;
+  notes: string;
   user_id?: string;
 }
 
-export async function getWorkouts(
-  studentId: number,
+export async function getExercises(
+  workoutId: number,
   userId: string
 ) {
   const { data, error } = await supabase
-    .from("workouts")
+    .from("exercises")
     .select("*")
-    .eq("student_id", studentId)
+    .eq("workout_id", workoutId)
     .eq("user_id", userId)
     .order("id");
 
@@ -26,35 +31,35 @@ export async function getWorkouts(
   return data;
 }
 
-export async function createWorkout(
-  workout: Workout
+export async function createExercise(
+  exercise: Exercise
 ) {
+  console.log("=== CREATE EXERCISE ===");
+  console.log(exercise);
+
   const { data, error } = await supabase
-    .from("workouts")
-    .insert({
-      name: workout.name,
-      student_id: workout.student_id,
-      user_id: workout.user_id,
-    })
+    .from("exercises")
+    .insert(exercise)
     .select();
 
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+
   if (error) {
-    console.error(error);
+    alert(error.message);
     return null;
   }
 
   return data;
 }
 
-export async function updateWorkout(
+export async function updateExercise(
   id: number,
-  workout: Workout
+  exercise: Exercise
 ) {
   const { data, error } = await supabase
-    .from("workouts")
-    .update({
-      name: workout.name,
-    })
+    .from("exercises")
+    .update(exercise)
     .eq("id", id)
     .select();
 
@@ -66,11 +71,11 @@ export async function updateWorkout(
   return data;
 }
 
-export async function deleteWorkout(
+export async function deleteExercise(
   id: number
 ) {
   const { error } = await supabase
-    .from("workouts")
+    .from("exercises")
     .delete()
     .eq("id", id);
 
@@ -79,11 +84,11 @@ export async function deleteWorkout(
   }
 }
 
-export async function getAllWorkouts(
+export async function getAllExercises(
   userId: string
 ) {
   const { data, error } = await supabase
-    .from("workouts")
+    .from("exercises")
     .select("*")
     .eq("user_id", userId);
 
