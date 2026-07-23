@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2, ClipboardList } from "lucide-react";
+import { ClipboardList, Plus, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import NewStudentModal from "../../components/students/NewStudentModal";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import {
-  getStudents,
   createStudent,
-  updateStudent,
   deleteStudent as deleteStudentService,
+  getStudents,
+  updateStudent,
 } from "../../services/students";
 
 type Student = {
@@ -16,7 +16,6 @@ type Student = {
   name: string;
   goal: string;
   plan: string;
-
   phone: string;
   email: string;
   birth_date: string;
@@ -29,6 +28,7 @@ type Student = {
 function Students() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
   const [openModal, setOpenModal] = useState(false);
 
   const [editingStudent, setEditingStudent] =
@@ -37,61 +37,58 @@ function Students() {
   const [students, setStudents] = useState<Student[]>([]);
 
   async function loadStudents() {
-  console.log("USER:", user);
+    console.log("USER:", user);
 
-  if (!user) return;
+    if (!user) return;
 
-  const data = await getStudents(user.id);
+    const data = await getStudents(user.id);
 
-  console.log("ALUNOS:", data);
+    console.log("ALUNOS:", data);
 
-  setStudents(data || []);
-}
+    setStudents(data || []);
+  }
 
   useEffect(() => {
     if (user) {
-    loadStudents();
+      loadStudents();
     }
   }, [user]);
 
   async function addStudent(student: Student) {
-  if (editingStudent) {
-    await updateStudent(editingStudent.id, {
-      name: student.name,
-      goal: student.goal,
-      plan: student.plan,
+    if (editingStudent) {
+      await updateStudent(editingStudent.id, {
+        name: student.name,
+        goal: student.goal,
+        plan: student.plan,
+        phone: student.phone,
+        email: student.email,
+        birth_date: student.birth_date,
+        gender: student.gender,
+        height: student.height,
+        weight: student.weight,
+        notes: student.notes,
+      });
+    } else {
+      await createStudent({
+        name: student.name,
+        goal: student.goal,
+        plan: student.plan,
+        phone: student.phone,
+        email: student.email,
+        birth_date: student.birth_date,
+        gender: student.gender,
+        height: student.height,
+        weight: student.weight,
+        notes: student.notes,
+        user_id: user?.id,
+      });
+    }
 
-      phone: student.phone,
-      email: student.email,
-      birth_date: student.birth_date,
-      gender: student.gender,
-      height: student.height,
-      weight: student.weight,
-      notes: student.notes,
-    });
-  } else {
-    await createStudent({
-      name: student.name,
-      goal: student.goal,
-      plan: student.plan,
+    await loadStudents();
 
-      phone: student.phone,
-      email: student.email,
-      birth_date: student.birth_date,
-      gender: student.gender,
-      height: student.height,
-      weight: student.weight,
-      notes: student.notes,
-
-      user_id: user?.id,
-    });
+    setEditingStudent(null);
+    setOpenModal(false);
   }
-
-  await loadStudents();
-
-  setEditingStudent(null);
-  setOpenModal(false);
-}
 
   async function deleteStudent(id: number) {
     await deleteStudentService(id);
@@ -132,85 +129,105 @@ function Students() {
         <p className="mb-4">
           Total de alunos: {students.length}
         </p>
+
         <table className="w-full">
           <thead className="bg-slate-800">
             <tr>
-              <th className="text-left p-5">Nome</th>
-              <th className="text-left p-5">Objetivo</th>
-              <th className="text-left p-5">Plano</th>
-              <th className="text-left p-5">Ações</th>
+              <th className="text-left p-5">
+                Nome
+              </th>
+
+              <th className="text-left p-5">
+                Objetivo
+              </th>
+
+              <th className="text-left p-5">
+                Plano
+              </th>
+
+              <th className="text-left p-5">
+                Ações
+              </th>
             </tr>
           </thead>
 
           <tbody>
-          {students.map((student) => (
-            <tr
-              key={student.id}
-              className="border-t border-slate-800 hover:bg-slate-800/40 transition"
-            >
-          <td
-            className="p-5 cursor-pointer hover:text-green-400"
-            onClick={() => navigate(`/students/${student.id}`)}
-          >
-            {student.name}
-          </td>
+            {students.map((student) => (
+              <tr
+                key={student.id}
+                className="border-t border-slate-800 hover:bg-slate-800/40 transition"
+              >
+                <td
+                  className="p-5 cursor-pointer hover:text-green-400"
+                  onClick={() =>
+                    navigate(`/students/${student.id}`)
+                  }
+                >
+                  {student.name}
+                </td>
 
-              <td className="p-5 text-slate-400">
-                {student.goal}
-              </td>
+                <td className="p-5 text-slate-400">
+                  {student.goal}
+                </td>
 
-              <td className="p-5">
-                <span className="bg-green-400/20 text-green-400 px-3 py-1 rounded-lg text-sm">
-                  {student.plan}
-                </span>
-              </td>
+                <td className="p-5">
+                  <span className="bg-green-400/20 text-green-400 px-3 py-1 rounded-lg text-sm">
+                    {student.plan}
+                  </span>
+                </td>
 
-              <td className="p-5">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => handleEditStudent(student)}
-              className="text-blue-400 hover:text-blue-300 transition"
-              title="Editar aluno"
-            >
-              ✏️
-            </button>
+                <td className="p-5">
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() =>
+                        handleEditStudent(student)
+                      }
+                      className="text-blue-400 hover:text-blue-300 transition"
+                      title="Editar aluno"
+                    >
+                      ✏️
+                    </button>
 
-            <button
-          onClick={() =>
-            navigate(`/students/${student.id}/workouts`)
-          }
-            className="text-green-400 hover:text-green-300 transition"
-            title="Treinos"
-        >
-              <ClipboardList size={20} />
-            </button>
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/students/${student.id}/workouts`
+                        )
+                      }
+                      className="text-green-400 hover:text-green-300 transition"
+                      title="Treinos"
+                    >
+                      <ClipboardList size={20} />
+                    </button>
 
-            <button
-              onClick={() => deleteStudent(student.id)}
-              className="text-red-400 hover:text-red-300 transition"
-              title="Excluir aluno"
-            >
-              <Trash2 size={20} />
-            </button>
-          </div>
-        </td>
-            </tr>
-          ))}
-        </tbody>
-                </table>
-              </div>
+                    <button
+                      onClick={() =>
+                        deleteStudent(student.id)
+                      }
+                      className="text-red-400 hover:text-red-300 transition"
+                      title="Excluir aluno"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-              <NewStudentModal
-                open={openModal}
-                onClose={() => {
-                  setOpenModal(false);
-                  setEditingStudent(null);
-                }}
-                onAddStudent={addStudent}
-                editingStudent={editingStudent}
-              />
-            </div>
-          );
-        }
+      <NewStudentModal
+        open={openModal}
+        onClose={() => {
+          setOpenModal(false);
+          setEditingStudent(null);
+        }}
+        onAddStudent={addStudent}
+        editingStudent={editingStudent}
+      />
+    </div>
+  );
+}
 
-        export default Students;
+export default Students;
