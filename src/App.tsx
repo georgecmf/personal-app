@@ -15,6 +15,7 @@ import Register from "./pages/register/Register";
 import StudentWorkouts from "./pages/workouts/StudentWorkouts";
 import PrivateRoute from "./routes/PrivateRoute";
 import WorkoutExercises from "./pages/workouts/WorkoutExercises";
+import StudentProfile from "./pages/students/StudentProfile";
 
 function App() {
   return (
@@ -38,34 +39,39 @@ function App() {
             path="/"
             element={<Dashboard />}
           />
-<Route
-  path="/students"
-  element={<Students />}
-/>
+            <Route
+              path="/students"
+              element={<Students />}
+            />
 
-<Route
-  path="/students/:studentId/workouts"
-  element={<StudentWorkouts />}
-/>
+            <Route
+              path="/students/:studentId"
+              element={<StudentProfile />}
+            />
 
-<Route
-  path="/students/:studentId/workouts/:workoutId"
-  element={<WorkoutExercises />}
-/>
+            <Route
+              path="/students/:studentId/workouts"
+              element={<StudentWorkouts />}
+            />
 
-    <Route
-      path="/workouts"
-      element={<Workouts />}
-    />
-        </Route>
+            <Route
+              path="/students/:studentId/workouts/:workoutId"
+              element={<WorkoutExercises />}
+            />
 
-        <Route
-          path="*"
-          element={<Navigate to="/" />}
-        />
-      </Routes>
-    </BrowserRouter>
-  );
-}
+                <Route
+                  path="/workouts"
+                  element={<Workouts />}
+                />
+                    </Route>
 
-export default App;
+                    <Route
+                      path="*"
+                      element={<Navigate to="/" />}
+                    />
+                  </Routes>
+                </BrowserRouter>
+              );
+            }
+
+            export default App;

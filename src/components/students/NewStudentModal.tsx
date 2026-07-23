@@ -5,6 +5,13 @@ type Student = {
   name: string;
   goal: string;
   plan: string;
+  phone: string;
+  email: string;
+  birth_date: string;
+  gender: string;
+  height: string;
+  weight: string;
+  notes: string;
 };
 
 type Props = {
@@ -23,18 +30,40 @@ function NewStudentModal({
   const [name, setName] = useState("");
   const [goal, setGoal] = useState("");
   const [plan, setPlan] = useState("Basic");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [notes, setNotes] = useState("");
 
   useEffect(() => {
     if (!open) return;
 
     if (editingStudent) {
-      setName(editingStudent.name);
+     setName(editingStudent.name);
       setGoal(editingStudent.goal);
       setPlan(editingStudent.plan);
+
+      setPhone(editingStudent.phone);
+      setEmail(editingStudent.email);
+      setBirthDate(editingStudent.birth_date);
+      setGender(editingStudent.gender);
+      setHeight(editingStudent.height);
+      setWeight(editingStudent.weight);
+      setNotes(editingStudent.notes);
     } else {
       setName("");
       setGoal("");
       setPlan("Basic");
+      setPhone("");
+      setEmail("");
+      setBirthDate("");
+      setGender("");
+      setHeight("");
+      setWeight("");
+      setNotes("");
     }
   }, [open, editingStudent]);
 
@@ -49,6 +78,13 @@ function NewStudentModal({
       name,
       goal,
       plan,
+      phone,
+      email,
+      birth_date: birthDate,
+      gender,
+      height,
+      weight,
+      notes,
     });
   }
 
@@ -81,6 +117,55 @@ function NewStudentModal({
 
           <input
             type="text"
+            placeholder="Telefone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="bg-slate-800 p-4 rounded-xl outline-none"
+          />
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-slate-800 p-4 rounded-xl outline-none"
+          />
+
+          <input
+            type="date"
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
+            className="bg-slate-800 p-4 rounded-xl outline-none"
+          />
+
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className="bg-slate-800 p-4 rounded-xl outline-none"
+          >
+            <option value="">Sexo</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+          </select>
+
+          <input
+            type="number"
+            placeholder="Altura (cm)"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+            className="bg-slate-800 p-4 rounded-xl outline-none"
+          />
+
+          <input
+            type="number"
+            placeholder="Peso (kg)"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            className="bg-slate-800 p-4 rounded-xl outline-none"
+          />
+
+          <input
+            type="text"
             placeholder="Objetivo"
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
@@ -95,6 +180,14 @@ function NewStudentModal({
             <option value="Basic">Basic</option>
             <option value="Premium">Premium</option>
           </select>
+
+          <textarea
+            placeholder="Observações"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="bg-slate-800 p-4 rounded-xl outline-none"
+            rows={4}
+          />
 
           <button
             onClick={handleSaveStudent}

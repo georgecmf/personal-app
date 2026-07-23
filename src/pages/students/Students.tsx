@@ -16,6 +16,14 @@ type Student = {
   name: string;
   goal: string;
   plan: string;
+
+  phone: string;
+  email: string;
+  birth_date: string;
+  gender: string;
+  height: string;
+  weight: string;
+  notes: string;
 };
 
 function Students() {
@@ -47,26 +55,43 @@ function Students() {
   }, [user]);
 
   async function addStudent(student: Student) {
-    if (editingStudent) {
-      await updateStudent(editingStudent.id, {
-        name: student.name,
-        goal: student.goal,
-        plan: student.plan,
-      });
-    } else {
-      await createStudent({
-        name: student.name,
-        goal: student.goal,
-        plan: student.plan,
-        user_id: user?.id,
-      });
-    }
+  if (editingStudent) {
+    await updateStudent(editingStudent.id, {
+      name: student.name,
+      goal: student.goal,
+      plan: student.plan,
 
-    await loadStudents();
+      phone: student.phone,
+      email: student.email,
+      birth_date: student.birth_date,
+      gender: student.gender,
+      height: student.height,
+      weight: student.weight,
+      notes: student.notes,
+    });
+  } else {
+    await createStudent({
+      name: student.name,
+      goal: student.goal,
+      plan: student.plan,
 
-    setEditingStudent(null);
-    setOpenModal(false);
+      phone: student.phone,
+      email: student.email,
+      birth_date: student.birth_date,
+      gender: student.gender,
+      height: student.height,
+      weight: student.weight,
+      notes: student.notes,
+
+      user_id: user?.id,
+    });
   }
+
+  await loadStudents();
+
+  setEditingStudent(null);
+  setOpenModal(false);
+}
 
   async function deleteStudent(id: number) {
     await deleteStudentService(id);
@@ -105,8 +130,8 @@ function Students() {
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
         <p className="mb-4">
-  Total de alunos: {students.length}
-</p>
+          Total de alunos: {students.length}
+        </p>
         <table className="w-full">
           <thead className="bg-slate-800">
             <tr>
@@ -118,74 +143,74 @@ function Students() {
           </thead>
 
           <tbody>
-  {students.map((student) => (
-    <tr
-      key={student.id}
-      className="border-t border-slate-800 hover:bg-slate-800/40 transition"
-    >
-      <td
-        className="p-5 cursor-pointer hover:text-green-400"
-        onClick={() => handleEditStudent(student)}
-      >
-        {student.name}
-      </td>
+          {students.map((student) => (
+            <tr
+              key={student.id}
+              className="border-t border-slate-800 hover:bg-slate-800/40 transition"
+            >
+          <td
+            className="p-5 cursor-pointer hover:text-green-400"
+            onClick={() => navigate(`/students/${student.id}`)}
+          >
+            {student.name}
+          </td>
 
-      <td className="p-5 text-slate-400">
-        {student.goal}
-      </td>
+              <td className="p-5 text-slate-400">
+                {student.goal}
+              </td>
 
-      <td className="p-5">
-        <span className="bg-green-400/20 text-green-400 px-3 py-1 rounded-lg text-sm">
-          {student.plan}
-        </span>
-      </td>
+              <td className="p-5">
+                <span className="bg-green-400/20 text-green-400 px-3 py-1 rounded-lg text-sm">
+                  {student.plan}
+                </span>
+              </td>
 
-      <td className="p-5">
-  <div className="flex items-center gap-4">
-    <button
-      onClick={() => handleEditStudent(student)}
-      className="text-blue-400 hover:text-blue-300 transition"
-      title="Editar aluno"
-    >
-      ✏️
-    </button>
+              <td className="p-5">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => handleEditStudent(student)}
+              className="text-blue-400 hover:text-blue-300 transition"
+              title="Editar aluno"
+            >
+              ✏️
+            </button>
 
-    <button
-  onClick={() =>
-    navigate(`/students/${student.id}/workouts`)
-  }
-  className="text-green-400 hover:text-green-300 transition"
-  title="Treinos"
->
-  <ClipboardList size={20} />
-</button>
+            <button
+          onClick={() =>
+            navigate(`/students/${student.id}/workouts`)
+          }
+            className="text-green-400 hover:text-green-300 transition"
+            title="Treinos"
+        >
+              <ClipboardList size={20} />
+            </button>
 
-    <button
-      onClick={() => deleteStudent(student.id)}
-      className="text-red-400 hover:text-red-300 transition"
-      title="Excluir aluno"
-    >
-      <Trash2 size={20} />
-    </button>
-  </div>
-</td>
-    </tr>
-  ))}
-</tbody>
-        </table>
-      </div>
+            <button
+              onClick={() => deleteStudent(student.id)}
+              className="text-red-400 hover:text-red-300 transition"
+              title="Excluir aluno"
+            >
+              <Trash2 size={20} />
+            </button>
+          </div>
+        </td>
+            </tr>
+          ))}
+        </tbody>
+                </table>
+              </div>
 
-      <NewStudentModal
-        open={openModal}
-        onClose={() => {
-          setOpenModal(false);
-          setEditingStudent(null);
-        }}
-        onAddStudent={addStudent}
-        editingStudent={editingStudent}
-      />
-    </div>
-  );
-}
+              <NewStudentModal
+                open={openModal}
+                onClose={() => {
+                  setOpenModal(false);
+                  setEditingStudent(null);
+                }}
+                onAddStudent={addStudent}
+                editingStudent={editingStudent}
+              />
+            </div>
+          );
+        }
 
-export default Students;
+        export default Students;

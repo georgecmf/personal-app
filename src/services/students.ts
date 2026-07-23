@@ -5,6 +5,15 @@ export interface Student {
   name: string;
   goal: string;
   plan: string;
+
+  phone: string;
+  email: string;
+  birth_date: string;
+  gender: string;
+  height: string;
+  weight: string;
+  notes: string;
+
   user_id?: string;
 }
 
@@ -36,6 +45,15 @@ export async function createStudent(student: Student) {
       name: student.name,
       goal: student.goal,
       plan: student.plan,
+
+      phone: student.phone,
+      email: student.email,
+      birth_date: student.birth_date,
+      gender: student.gender,
+      height: student.height,
+      weight: student.weight,
+      notes: student.notes,
+
       user_id: student.user_id,
     })
     .select();
@@ -69,7 +87,19 @@ export async function updateStudent(
   const { data, error } =
     await supabase
       .from("students")
-      .update(student)
+      .update({
+        name: student.name,
+        goal: student.goal,
+        plan: student.plan,
+
+        phone: student.phone,
+        email: student.email,
+        birth_date: student.birth_date,
+        gender: student.gender,
+        height: student.height,
+        weight: student.weight,
+        notes: student.notes,
+      })
       .eq("id", id)
       .select();
 
