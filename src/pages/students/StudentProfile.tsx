@@ -202,6 +202,15 @@ function StudentProfile() {
             Ver Treinos
           </button>
 
+          <button
+            onClick={() =>
+              navigate(`/students/${student.id}/assessments`)
+            }
+            className="bg-blue-400 text-slate-950 px-6 py-3 rounded-xl font-bold"
+          >
+            Avaliações
+          </button>
+
         </div>
 
       </div>

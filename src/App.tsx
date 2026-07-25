@@ -16,6 +16,8 @@ import StudentWorkouts from "./pages/workouts/StudentWorkouts";
 import PrivateRoute from "./routes/PrivateRoute";
 import WorkoutExercises from "./pages/workouts/WorkoutExercises";
 import StudentProfile from "./pages/students/StudentProfile";
+import StudentAssessments from "./pages/assessments/StudentAssessments";
+
 
 function App() {
   return (
@@ -59,18 +61,23 @@ function App() {
               element={<WorkoutExercises />}
             />
 
-                <Route
-                  path="/workouts"
-                  element={<Workouts />}
-                />
-                    </Route>
+            <Route
+              path="/students/:studentId/assessments"
+              element={<StudentAssessments />}
+            />
 
-                    <Route
-                      path="*"
-                      element={<Navigate to="/" />}
-                    />
-                  </Routes>
-                </BrowserRouter>
+            <Route
+              path="/workouts"
+              element={<Workouts />}
+             />
+            </Route>
+
+            <Route
+              path="*"
+              element={<Navigate to="/" />}
+              />
+              </Routes>
+              </BrowserRouter>
               );
             }
 
