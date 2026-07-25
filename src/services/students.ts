@@ -13,6 +13,7 @@ export interface Student {
   height: string;
   weight: string;
   notes: string;
+  photo_url?: string;
 
   user_id?: string;
 }
@@ -99,6 +100,7 @@ export async function updateStudent(
         height: student.height,
         weight: student.weight,
         notes: student.notes,
+        photo_url: student.photo_url,
       })
       .eq("id", id)
       .select();
@@ -110,4 +112,52 @@ export async function updateStudent(
   }
 
   return data;
+}
+
+export async function getStudentById(
+  id: number,
+  userId: string
+) {
+  const { data, error } = await supabase
+    .from("students")
+    .select("*")
+    .eq("id", id)
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function uploadStudentPhoto(
+  file: File,
+  studentId: number,
+  userId: string
+) {
+  const fileExt = file.name.split(".").pop();
+
+  const fileName = `${userId}/${studentId}.${fileExt}`;
+
+  const { error } = await supabase.storage
+    .from("students")
+    .upload(fileName, file, {
+      upsert: true,
+    });
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage
+    .from("students")
+    .getPublicUrl(fileName);
+
+  return publicUrl;
 }
