@@ -6,11 +6,14 @@ import { useAuth } from "../../hooks/useAuth";
 
 import {
   getAssessments,
+  createAssessment
 } from "../../services/physicalAssessments";
 
 import type {
   PhysicalAssessment,
 } from "../../services/physicalAssessments";
+
+import NewAssessmentModal from "../../components/assessments/NewAssessmentModal";
 
 function StudentAssessments() {
   const { studentId } = useParams();
@@ -18,6 +21,8 @@ function StudentAssessments() {
   const { user } = useAuth();
 
   const [assessments, setAssessments] = useState<PhysicalAssessment[]>([]);
+
+  const [openModal, setOpenModal] = useState(false);
 
   async function loadAssessments() {
     if (!user || !studentId) return;
@@ -34,6 +39,22 @@ function StudentAssessments() {
     loadAssessments();
   }, [user, studentId]);
 
+async function addAssessment(
+  assessment: PhysicalAssessment
+) {
+  if (!user || !studentId) return;
+
+  await createAssessment({
+    ...assessment,
+    student_id: Number(studentId),
+    user_id: user.id,
+  });
+
+  await loadAssessments();
+
+  setOpenModal(false);
+}
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -48,6 +69,7 @@ function StudentAssessments() {
         </div>
 
         <button
+          onClick={() => setOpenModal(true)}
           className="flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
         >
           <Plus size={20} />
@@ -92,6 +114,11 @@ function StudentAssessments() {
           </div>
         )}
       </div>
+       <NewAssessmentModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          onSave={addAssessment}
+        />
     </div>
   );
 }
