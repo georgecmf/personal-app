@@ -14,6 +14,9 @@ import type {
 } from "../../services/physicalAssessments";
 
 import NewAssessmentModal from "../../components/assessments/NewAssessmentModal";
+import AssessmentDetailsModal from "../../components/assessments/AssessmentDetailsModal";
+import AssessmentCharts from "../../components/assessments/AssessmentCharts";
+
 
 function StudentAssessments() {
   const { studentId } = useParams();
@@ -23,6 +26,9 @@ function StudentAssessments() {
   const [assessments, setAssessments] = useState<PhysicalAssessment[]>([]);
 
   const [openModal, setOpenModal] = useState(false);
+
+  const [selectedAssessment, setSelectedAssessment] =
+  useState<PhysicalAssessment | null>(null);
 
   async function loadAssessments() {
     if (!user || !studentId) return;
@@ -77,6 +83,10 @@ async function addAssessment(
         </button>
       </div>
 
+      <AssessmentCharts
+          assessments={assessments}
+        />
+
       <div className="space-y-4">
         {assessments.map((assessment) => (
           <div
@@ -105,6 +115,16 @@ async function addAssessment(
                 <p>{assessment.muscle_mass || "-"} kg</p>
               </div>
             </div>
+
+            <div className="mt-6">
+                <button
+                  onClick={() => setSelectedAssessment(assessment)}
+                  className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition"
+                >
+                  Ver detalhes
+                </button>
+              </div>
+
           </div>
         ))}
 
@@ -119,6 +139,11 @@ async function addAssessment(
           onClose={() => setOpenModal(false)}
           onSave={addAssessment}
         />
+      <AssessmentDetailsModal
+        assessment={selectedAssessment}
+        onClose={() => setSelectedAssessment(null)}
+      />
+
     </div>
   );
 }

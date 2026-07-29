@@ -18,7 +18,23 @@ function NewAssessmentModal({
   const [bodyFat, setBodyFat] = useState("");
   const [muscleMass, setMuscleMass] = useState("");
   const [observations, setObservations] = useState("");
+  const [chest, setChest] = useState("");
+  const [waist, setWaist] = useState("");
+  const [abdomen, setAbdomen] = useState("");
+  const [hip, setHip] = useState("");
 
+  const [rightArm, setRightArm] = useState("");
+  const [leftArm, setLeftArm] = useState("");
+
+  const [rightForearm, setRightForearm] = useState("");
+  const [leftForearm, setLeftForearm] = useState("");
+
+  const [rightThigh, setRightThigh] = useState("");
+  const [leftThigh, setLeftThigh] = useState("");
+
+  const [rightCalf, setRightCalf] = useState("");
+  const [leftCalf, setLeftCalf] = useState("");
+  
   useEffect(() => {
     if (open) {
       setAssessmentDate(
@@ -29,6 +45,23 @@ function NewAssessmentModal({
       setBodyFat("");
       setMuscleMass("");
       setObservations("");
+
+      setChest("");
+      setWaist("");
+      setAbdomen("");
+      setHip("");
+
+      setRightArm("");
+      setLeftArm("");
+
+      setRightForearm("");
+      setLeftForearm("");
+
+      setRightThigh("");
+      setLeftThigh("");
+
+      setRightCalf("");
+      setLeftCalf("");
     }
   }, [open]);
 
@@ -81,6 +114,90 @@ function NewAssessmentModal({
             className="w-full p-3 rounded-xl bg-slate-800"
           />
 
+          <input
+            placeholder="Peito (cm)"
+            value={chest}
+            onChange={(e) => setChest(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Cintura (cm)"
+            value={waist}
+            onChange={(e) => setWaist(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Abdômen (cm)"
+            value={abdomen}
+            onChange={(e) => setAbdomen(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Quadril (cm)"
+            value={hip}
+            onChange={(e) => setHip(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Braço direito (cm)"
+            value={rightArm}
+            onChange={(e) => setRightArm(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Braço esquerdo (cm)"
+            value={leftArm}
+            onChange={(e) => setLeftArm(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Antebraço direito (cm)"
+            value={rightForearm}
+            onChange={(e) => setRightForearm(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Antebraço esquerdo (cm)"
+            value={leftForearm}
+            onChange={(e) => setLeftForearm(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Coxa direita (cm)"
+            value={rightThigh}
+            onChange={(e) => setRightThigh(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Coxa esquerda (cm)"
+            value={leftThigh}
+            onChange={(e) => setLeftThigh(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Panturrilha direita (cm)"
+            value={rightCalf}
+            onChange={(e) => setRightCalf(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
+          <input
+            placeholder="Panturrilha esquerda (cm)"
+            value={leftCalf}
+            onChange={(e) => setLeftCalf(e.target.value)}
+            className="w-full p-3 rounded-xl bg-slate-800"
+          />
+
           <textarea
             placeholder="Observações"
             value={observations}
@@ -111,22 +228,22 @@ function NewAssessmentModal({
                 body_fat: bodyFat,
                 muscle_mass: muscleMass,
 
-                chest: "",
-                waist: "",
-                abdomen: "",
-                hip: "",
+                chest,
+                waist,
+                abdomen,
+                hip,
 
-                right_arm: "",
-                left_arm: "",
+                right_arm: rightArm,
+                left_arm: leftArm,
 
-                right_forearm: "",
-                left_forearm: "",
+                right_forearm: rightForearm,
+                left_forearm: leftForearm,
 
-                right_thigh: "",
-                left_thigh: "",
+                right_thigh: rightThigh,
+                left_thigh: leftThigh,
 
-                right_calf: "",
-                left_calf: "",
+                right_calf: rightCalf,
+                left_calf: leftCalf,
 
                 observations,
               })
