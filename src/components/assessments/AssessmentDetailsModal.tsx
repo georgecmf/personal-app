@@ -57,6 +57,16 @@ function AssessmentDetailsModal({
         </div>
 
         <div className="mt-8">
+          <h3 className="text-xl font-bold mb-3">
+            Observações
+          </h3>
+
+          <div className="bg-slate-800 rounded-xl p-4 min-h-[120px]">
+            {assessment.observations || "Nenhuma observação."}
+          </div>
+        </div>
+
+        <div className="mt-8">
           <h3 className="text-xl font-bold mb-4">
             Fotos da Avaliação
           </h3>
@@ -65,42 +75,45 @@ function AssessmentDetailsModal({
 
             {assessment.front_photo && (
               <div>
-                <p className="mb-2 text-center text-slate-400">
+                <p className="text-center mb-2 text-slate-400">
                   Frente
                 </p>
 
                 <img
                   src={assessment.front_photo}
                   alt="Frente"
-                  className="rounded-xl w-full h-72 object-cover border border-slate-700"
+                  className="rounded-xl w-full h-64 object-cover cursor-pointer hover:scale-105 transition"
+                  onClick={() => window.open(assessment.front_photo!, "_blank")}
                 />
               </div>
             )}
 
             {assessment.side_photo && (
               <div>
-                <p className="mb-2 text-center text-slate-400">
+                <p className="text-center mb-2 text-slate-400">
                   Lado
                 </p>
 
                 <img
                   src={assessment.side_photo}
                   alt="Lado"
-                  className="rounded-xl w-full h-72 object-cover border border-slate-700"
+                  className="rounded-xl w-full h-64 object-cover cursor-pointer hover:scale-105 transition"
+                  onClick={() => window.open(assessment.side_photo!, "_blank")}
                 />
               </div>
             )}
 
             {assessment.back_photo && (
               <div>
-                <p className="mb-2 text-center text-slate-400">
+                <p className="text-center mb-2 text-slate-400">
                   Costas
                 </p>
 
                 <img
                   src={assessment.back_photo}
                   alt="Costas"
-                  className="rounded-xl w-full h-72 object-cover border border-slate-700"
+                  className="rounded-xl w-full h-64 object-cover cursor-pointer hover:scale-105 transition"
+                  onClick={() => window.open(assessment.back_photo!, "_blank")}
                 />
               </div>
             )}
@@ -108,31 +121,19 @@ function AssessmentDetailsModal({
           </div>
         </div>
 
-        <div className="mt-8">
+              </div>
 
-          <h3 className="text-xl font-bold mb-3">
-            Observações
-          </h3>
+            </div>
+          );
+        }
 
-          <div className="bg-slate-800 rounded-xl p-4 min-h-[120px]">
-            {assessment.observations || "Nenhuma observação."}
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-  );
-}
-
-function Info({
-  title,
-  value,
-}: {
-  title: string;
-  value: string;
-}) {
+        function Info({
+          title,
+          value,
+        }: {
+          title: string;
+          value: string;
+        }) {
   return (
     <div className="bg-slate-800 rounded-xl p-4">
 
