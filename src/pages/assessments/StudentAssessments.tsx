@@ -6,7 +6,10 @@ import { useAuth } from "../../hooks/useAuth";
 
 import {
   getAssessments,
-  createAssessment
+  createAssessment,
+  updateAssessment,
+  deleteAssessment,
+  uploadAssessmentPhoto,
 } from "../../services/physicalAssessments";
 
 import type {
@@ -30,6 +33,9 @@ function StudentAssessments() {
   const [selectedAssessment, setSelectedAssessment] =
   useState<PhysicalAssessment | null>(null);
 
+  const [editingAssessment, setEditingAssessment] =
+  useState<PhysicalAssessment | null>(null);
+
   async function loadAssessments() {
     if (!user || !studentId) return;
 
@@ -45,20 +51,75 @@ function StudentAssessments() {
     loadAssessments();
   }, [user, studentId]);
 
-async function addAssessment(
-  assessment: PhysicalAssessment
+async function saveAssessment(
+  assessment: PhysicalAssessment,
+  frontPhoto: File | null,
+  sidePhoto: File | null,
+  backPhoto: File | null
 ) {
   if (!user || !studentId) return;
 
-  await createAssessment({
-    ...assessment,
-    student_id: Number(studentId),
-    user_id: user.id,
-  });
+  let frontPhotoUrl = editingAssessment?.front_photo || "";
+  let sidePhotoUrl = editingAssessment?.side_photo || "";
+  let backPhotoUrl = editingAssessment?.back_photo || "";
+
+  if (frontPhoto) {
+    const url = await uploadAssessmentPhoto(frontPhoto, user.id);
+    if (url) frontPhotoUrl = url;
+  }
+
+  if (sidePhoto) {
+    const url = await uploadAssessmentPhoto(sidePhoto, user.id);
+    if (url) sidePhotoUrl = url;
+  }
+
+  if (backPhoto) {
+    const url = await uploadAssessmentPhoto(backPhoto, user.id);
+    if (url) backPhotoUrl = url;
+}
+
+  if (editingAssessment) {
+    await updateAssessment(
+      editingAssessment.id!,
+      {
+      ...assessment,
+      id: editingAssessment.id,
+      student_id: Number(studentId),
+      user_id: user.id,
+
+      front_photo: frontPhotoUrl,
+      side_photo: sidePhotoUrl,
+      back_photo: backPhotoUrl,
+    }
+  );
+  } else {
+    await createAssessment({
+      ...assessment,
+      student_id: Number(studentId),
+      user_id: user.id,
+
+      front_photo: frontPhotoUrl,
+      side_photo: sidePhotoUrl,
+      back_photo: backPhotoUrl,
+    });
+  }
 
   await loadAssessments();
 
+  setEditingAssessment(null);
   setOpenModal(false);
+}
+
+async function removeAssessment(id: number) {
+  const confirmDelete = window.confirm(
+    "Deseja realmente excluir esta avaliação?"
+  );
+
+  if (!confirmDelete) return;
+
+  await deleteAssessment(id);
+
+  await loadAssessments();
 }
 
   return (
@@ -75,7 +136,10 @@ async function addAssessment(
         </div>
 
         <button
-          onClick={() => setOpenModal(true)}
+          onClick={() => {
+            setEditingAssessment(null);
+            setOpenModal(true);
+          }}
           className="flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
         >
           <Plus size={20} />
@@ -88,62 +152,84 @@ async function addAssessment(
         />
 
       <div className="space-y-4">
-        {assessments.map((assessment) => (
-          <div
-            key={assessment.id}
-            className="bg-slate-900 border border-slate-800 rounded-2xl p-6"
-          >
-            <h2 className="text-2xl font-bold">
-              {new Date(
-                assessment.assessment_date
-              ).toLocaleDateString("pt-BR")}
-            </h2>
+  {assessments.map((assessment) => (
+    <div
+      key={assessment.id}
+      className="bg-slate-900 border border-slate-800 rounded-2xl p-6"
+    >
+      <h2 className="text-2xl font-bold">
+        {new Date(
+          assessment.assessment_date
+        ).toLocaleDateString("pt-BR")}
+      </h2>
 
-            <div className="mt-4 grid grid-cols-3 gap-6">
-              <div>
-                <p className="text-slate-500">Peso</p>
-                <p>{assessment.weight || "-"} kg</p>
-              </div>
+      <div className="mt-4 grid grid-cols-3 gap-6">
+        <div>
+          <p className="text-slate-500">Peso</p>
+          <p>{assessment.weight || "-"} kg</p>
+        </div>
 
-              <div>
-                <p className="text-slate-500">% Gordura</p>
-                <p>{assessment.body_fat || "-"}%</p>
-              </div>
+        <div>
+          <p className="text-slate-500">% Gordura</p>
+          <p>{assessment.body_fat || "-"}%</p>
+        </div>
 
-              <div>
-                <p className="text-slate-500">Massa muscular</p>
-                <p>{assessment.muscle_mass || "-"} kg</p>
-              </div>
-            </div>
-
-            <div className="mt-6">
-                <button
-                  onClick={() => setSelectedAssessment(assessment)}
-                  className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition"
-                >
-                  Ver detalhes
-                </button>
-              </div>
-
-          </div>
-        ))}
-
-        {assessments.length === 0 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-10 text-center text-slate-500">
-            Nenhuma avaliação cadastrada.
-          </div>
-        )}
+        <div>
+          <p className="text-slate-500">Massa muscular</p>
+          <p>{assessment.muscle_mass || "-"} kg</p>
+        </div>
       </div>
-       <NewAssessmentModal
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-          onSave={addAssessment}
-        />
+
+      <div className="mt-6 flex gap-3">
+        <button
+          onClick={() => setSelectedAssessment(assessment)}
+          className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition"
+        >
+          Ver detalhes
+        </button>
+
+        <button
+          onClick={() => {
+            setEditingAssessment(assessment);
+            setOpenModal(true);
+          }}
+          className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 px-4 py-2 rounded-xl font-bold"
+        >
+          Editar
+        </button>
+
+        <button
+          onClick={() => removeAssessment(assessment.id!)}
+          className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-xl"
+        >
+          Excluir
+        </button>
+      </div>
+
+    </div>
+  ))}
+
+  {assessments.length === 0 && (
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-10 text-center text-slate-500">
+      Nenhuma avaliação cadastrada.
+    </div>
+  )}
+</div>
+
+<NewAssessmentModal
+  open={openModal}
+  assessment={editingAssessment}
+  onClose={() => {
+    setOpenModal(false);
+    setEditingAssessment(null);
+  }}
+  onSave={saveAssessment}
+/>
+
       <AssessmentDetailsModal
         assessment={selectedAssessment}
         onClose={() => setSelectedAssessment(null)}
       />
-
     </div>
   );
 }

@@ -57,6 +57,58 @@ function AssessmentDetailsModal({
         </div>
 
         <div className="mt-8">
+          <h3 className="text-xl font-bold mb-4">
+            Fotos da Avaliação
+          </h3>
+
+          <div className="grid grid-cols-3 gap-4">
+
+            {assessment.front_photo && (
+              <div>
+                <p className="mb-2 text-center text-slate-400">
+                  Frente
+                </p>
+
+                <img
+                  src={assessment.front_photo}
+                  alt="Frente"
+                  className="rounded-xl w-full h-72 object-cover border border-slate-700"
+                />
+              </div>
+            )}
+
+            {assessment.side_photo && (
+              <div>
+                <p className="mb-2 text-center text-slate-400">
+                  Lado
+                </p>
+
+                <img
+                  src={assessment.side_photo}
+                  alt="Lado"
+                  className="rounded-xl w-full h-72 object-cover border border-slate-700"
+                />
+              </div>
+            )}
+
+            {assessment.back_photo && (
+              <div>
+                <p className="mb-2 text-center text-slate-400">
+                  Costas
+                </p>
+
+                <img
+                  src={assessment.back_photo}
+                  alt="Costas"
+                  className="rounded-xl w-full h-72 object-cover border border-slate-700"
+                />
+              </div>
+            )}
+
+          </div>
+        </div>
+
+        <div className="mt-8">
 
           <h3 className="text-xl font-bold mb-3">
             Observações

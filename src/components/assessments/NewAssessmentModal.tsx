@@ -4,12 +4,19 @@ import type { PhysicalAssessment } from "../../services/physicalAssessments";
 
 type Props = {
   open: boolean;
+  assessment: PhysicalAssessment | null;
   onClose: () => void;
-  onSave: (assessment: PhysicalAssessment) => void;
+  onSave: (
+    assessment: PhysicalAssessment,
+    frontPhoto: File | null,
+    sidePhoto: File | null,
+    backPhoto: File | null
+  ) => void;
 };
 
 function NewAssessmentModal({
   open,
+  assessment,
   onClose,
   onSave,
 }: Props) {
@@ -35,8 +42,41 @@ function NewAssessmentModal({
   const [rightCalf, setRightCalf] = useState("");
   const [leftCalf, setLeftCalf] = useState("");
   
+  const [frontPhoto, setFrontPhoto] = useState<File | null>(null);
+  const [sidePhoto, setSidePhoto] = useState<File | null>(null);
+  const [backPhoto, setBackPhoto] = useState<File | null>(null);
+
+useEffect(() => {
+  if (!assessment) return;
+
+  setAssessmentDate(assessment.assessment_date);
+
+  setWeight(assessment.weight);
+  setBodyFat(assessment.body_fat);
+  setMuscleMass(assessment.muscle_mass);
+
+  setChest(assessment.chest);
+  setWaist(assessment.waist);
+  setAbdomen(assessment.abdomen);
+  setHip(assessment.hip);
+
+  setRightArm(assessment.right_arm);
+  setLeftArm(assessment.left_arm);
+
+  setRightForearm(assessment.right_forearm);
+  setLeftForearm(assessment.left_forearm);
+
+  setRightThigh(assessment.right_thigh);
+  setLeftThigh(assessment.left_thigh);
+
+  setRightCalf(assessment.right_calf);
+  setLeftCalf(assessment.left_calf);
+
+  setObservations(assessment.observations);
+}, [assessment]);
+
   useEffect(() => {
-    if (open) {
+    if (open && !assessment) {
       setAssessmentDate(
         new Date().toISOString().split("T")[0]
       );
@@ -73,7 +113,7 @@ function NewAssessmentModal({
       <div className="bg-slate-900 rounded-2xl p-8 w-[500px]">
 
         <h2 className="text-3xl font-bold mb-6">
-          Nova Avaliação
+          {assessment ? "Editar Avaliação" : "Nova Avaliação"}
         </h2>
 
         <div className="space-y-4">
@@ -198,6 +238,51 @@ function NewAssessmentModal({
             className="w-full p-3 rounded-xl bg-slate-800"
           />
 
+          <div>
+            <label className="block mb-2 font-semibold">
+              Foto Frente
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setFrontPhoto(e.target.files?.[0] || null)
+              }
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 font-semibold">
+              Foto Lado
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setSidePhoto(e.target.files?.[0] || null)
+              }
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 font-semibold">
+              Foto Costas
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setBackPhoto(e.target.files?.[0] || null)
+              }
+              className="w-full"
+            />
+          </div>
+
           <textarea
             placeholder="Observações"
             value={observations}
@@ -220,7 +305,8 @@ function NewAssessmentModal({
 
           <button
             onClick={() =>
-              onSave({
+            onSave(
+              {
                 student_id: 0,
                 assessment_date: assessmentDate,
 
@@ -246,8 +332,12 @@ function NewAssessmentModal({
                 left_calf: leftCalf,
 
                 observations,
-              })
-            }
+              },
+              frontPhoto,
+              sidePhoto,
+              backPhoto
+            )
+          }
             className="px-5 py-3 rounded-xl bg-green-400 text-slate-950 font-bold"
           >
             Salvar
