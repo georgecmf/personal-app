@@ -1,5 +1,7 @@
 import type { PhysicalAssessment } from "../../services/physicalAssessments";
 
+import { generateAssessmentPdf } from "../../services/pdf";
+
 type Props = {
   assessment: PhysicalAssessment | null;
   onClose: () => void;
@@ -9,29 +11,63 @@ function AssessmentDetailsModal({
   assessment,
   onClose,
 }: Props) {
+
+
   if (!assessment) return null;
+
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
 
-      <div className="bg-slate-900 rounded-2xl p-8 w-[700px] max-h-[90vh] overflow-y-auto">
+    <div className="bg-slate-900 rounded-2xl p-8 w-[700px] max-h-[90vh] overflow-y-auto">
 
-        <div className="flex justify-between items-center mb-8">
+    <div className="flex justify-between items-center mb-8">
 
-          <h2 className="text-3xl font-bold">
-            Avaliação Física
-          </h2>
+      <h2 className="text-3xl font-bold">
+        Avaliação Física
+      </h2>
 
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-white text-2xl"
-          >
-            ✕
-          </button>
+      <div className="flex items-center gap-3">
 
-        </div>
+        <button
+          onClick={async () => {
+            console.log("Botão clicado");
 
-        <div className="grid grid-cols-2 gap-6">
+            await generateAssessmentPdf(
+              assessment,
+              `avaliacao-${assessment.assessment_date}`
+            );
+          }}
+          className="bg-green-500 hover:bg-green-400 text-slate-950 px-4 py-2 rounded-xl font-bold"
+        >
+          Gerar PDF
+        </button>
+
+        <button
+          onClick={onClose}
+          className="text-slate-400 hover:text-white text-2xl"
+        >
+          ✕
+        </button>
+
+      </div>
+
+    </div>  
+
+     <div
+      style={{
+        backgroundColor: "#0f172a",
+        color: "#ffffff",
+      }}
+    >
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "24px",
+          }}
+        >
 
           <Info title="Peso" value={`${assessment.weight} kg`} />
           <Info title="% Gordura" value={`${assessment.body_fat}%`} />
@@ -57,11 +93,24 @@ function AssessmentDetailsModal({
         </div>
 
         <div className="mt-8">
-          <h3 className="text-xl font-bold mb-3">
+          <h3
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              marginBottom: "12px",
+            }}
+          >
             Observações
           </h3>
 
-          <div className="bg-slate-800 rounded-xl p-4 min-h-[120px]">
+         <div
+            style={{
+              backgroundColor: "#1e293b",
+              borderRadius: "12px",
+              padding: "16px",
+              minHeight: "120px",
+            }}
+          >
             {assessment.observations || "Nenhuma observação."}
           </div>
         </div>
@@ -82,7 +131,12 @@ function AssessmentDetailsModal({
                 <img
                   src={assessment.front_photo}
                   alt="Frente"
-                  className="rounded-xl w-full h-64 object-cover cursor-pointer hover:scale-105 transition"
+                  style={{
+                    width: "100%",
+                    height: "256px",
+                    objectFit: "cover",
+                    borderRadius: "12px",
+                  }}
                   onClick={() => window.open(assessment.front_photo!, "_blank")}
                 />
               </div>
@@ -97,7 +151,12 @@ function AssessmentDetailsModal({
                 <img
                   src={assessment.side_photo}
                   alt="Lado"
-                  className="rounded-xl w-full h-64 object-cover cursor-pointer hover:scale-105 transition"
+                  style={{
+                    width: "100%",
+                    height: "256px",
+                    objectFit: "cover",
+                    borderRadius: "12px",
+                  }}
                   onClick={() => window.open(assessment.side_photo!, "_blank")}
                 />
               </div>
@@ -112,7 +171,12 @@ function AssessmentDetailsModal({
                 <img
                   src={assessment.back_photo}
                   alt="Costas"
-                  className="rounded-xl w-full h-64 object-cover cursor-pointer hover:scale-105 transition"
+                  style={{
+                    width: "100%",
+                    height: "256px",
+                    objectFit: "cover",
+                    borderRadius: "12px",
+                  }}
                   onClick={() => window.open(assessment.back_photo!, "_blank")}
                 />
               </div>
@@ -120,10 +184,11 @@ function AssessmentDetailsModal({
 
           </div>
         </div>
+      </div>
 
-              </div>
-
-            </div>
+    </div>
+  
+  </div>
           );
         }
 
@@ -134,19 +199,37 @@ function AssessmentDetailsModal({
           title: string;
           value: string;
         }) {
-  return (
-    <div className="bg-slate-800 rounded-xl p-4">
+  
+    return (
+      <div
+        style={{
+          backgroundColor: "#1e293b",
+          borderRadius: "12px",
+          padding: "16px",
+        }}
+      >
 
-      <p className="text-slate-400 text-sm">
-        {title}
-      </p>
+        <p
+          style={{
+            color: "#94a3b8",
+            fontSize: "14px",
+          }}
+        >
+          {title}
+        </p>
 
-      <p className="text-xl font-bold mt-1">
-        {value}
-      </p>
+        <p
+          style={{
+            fontSize: "20px",
+            fontWeight: "bold",
+            marginTop: "4px",
+          }}
+        >
+          {value}
+        </p>
 
-    </div>
-  );
+      </div>
+    );
 }
 
 export default AssessmentDetailsModal;

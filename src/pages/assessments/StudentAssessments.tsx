@@ -19,6 +19,7 @@ import type {
 import NewAssessmentModal from "../../components/assessments/NewAssessmentModal";
 import AssessmentDetailsModal from "../../components/assessments/AssessmentDetailsModal";
 import AssessmentCharts from "../../components/assessments/AssessmentCharts";
+import AssessmentComparisonModal from "../../components/assessments/AssessmentComparisonModal";
 
 
 function StudentAssessments() {
@@ -34,6 +35,12 @@ function StudentAssessments() {
   useState<PhysicalAssessment | null>(null);
 
   const [editingAssessment, setEditingAssessment] =
+  useState<PhysicalAssessment | null>(null);
+
+  const [comparisonCurrent, setComparisonCurrent] =
+  useState<PhysicalAssessment | null>(null);
+
+  const [comparisonPrevious, setComparisonPrevious] =
   useState<PhysicalAssessment | null>(null);
 
   async function loadAssessments() {
@@ -190,6 +197,25 @@ async function removeAssessment(id: number) {
 
         <button
           onClick={() => {
+            const index = assessments.findIndex(
+              (a) => a.id === assessment.id
+            );
+
+            if (index === assessments.length - 1) {
+              alert("Esta é a primeira avaliação do aluno.");
+              return;
+            }
+
+            setComparisonCurrent(assessment);
+            setComparisonPrevious(assessments[index + 1]);
+          }}
+          className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl"
+        >
+          Comparar
+        </button>
+
+        <button
+          onClick={() => {
             setEditingAssessment(assessment);
             setOpenModal(true);
           }}
@@ -229,6 +255,15 @@ async function removeAssessment(id: number) {
       <AssessmentDetailsModal
         assessment={selectedAssessment}
         onClose={() => setSelectedAssessment(null)}
+      />
+
+      <AssessmentComparisonModal
+        current={comparisonCurrent}
+        previous={comparisonPrevious}
+        onClose={() => {
+          setComparisonCurrent(null);
+          setComparisonPrevious(null);
+        }}
       />
     </div>
   );
