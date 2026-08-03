@@ -24,9 +24,10 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    textAlign: "center",
+    marginBottom: 25,
   },
 
   sectionTitle: {
@@ -67,8 +68,8 @@ const styles = StyleSheet.create({
   },
 
   photos: {
-    display: "flex",
     flexDirection: "row",
+    justifyContent: "space-between",
     gap: 10,
   },
 
@@ -76,6 +77,8 @@ const styles = StyleSheet.create({
     width: 160,
     height: 220,
     objectFit: "cover",
+    border: "1 solid #d1d5db",
+    borderRadius: 6,
   },
 
 });
@@ -85,6 +88,10 @@ export default function AssessmentPdfDocument({
   assessment,
 }: Props) {
 
+  const formattedDate = new Date(
+  assessment.assessment_date
+).toLocaleDateString("pt-BR");
+
   return (
 
     <Document>
@@ -93,55 +100,92 @@ export default function AssessmentPdfDocument({
       <Page size="A4" style={styles.page}>
 
         <Text style={styles.title}>
-          Avaliação Física
+          AVALIAÇÃO FÍSICA
         </Text>
 
+        <View
+          style={{
+            marginBottom: 20,
+            borderBottom: "1 solid #d1d5db",
+            paddingBottom: 10,
+          }}
+        >
+          <Row
+            label="Data da avaliação"
+            value={formattedDate}
+          />
 
-        <Text>
-          Data: {assessment.assessment_date}
-        </Text>
-
-
-        <Text style={styles.sectionTitle}>
-          Medidas principais
-        </Text>
-
-
-        <View style={styles.grid}>
-
-          <Info
-            title="Peso"
+          <Row
+            label="Peso"
             value={`${assessment.weight} kg`}
           />
 
-          <Info
-            title="% Gordura"
+          <Row
+            label="% Gordura"
             value={`${assessment.body_fat}%`}
           />
 
-          <Info
-            title="Massa muscular"
+          <Row
+            label="Massa muscular"
             value={`${assessment.muscle_mass} kg`}
           />
-
-
-          <Info
-            title="Peito"
-            value={`${assessment.chest} cm`}
-          />
-
-          <Info
-            title="Cintura"
-            value={`${assessment.waist} cm`}
-          />
-
-          <Info
-            title="Abdômen"
-            value={`${assessment.abdomen} cm`}
-          />
-
         </View>
 
+
+          <Text style={styles.sectionTitle}>
+            Medidas principais
+          </Text>
+
+          <View>
+
+            <Row
+              label="Peito"
+              value={`${assessment.chest} cm`}
+            />
+
+            <Row
+              label="Cintura"
+              value={`${assessment.waist} cm`}
+            />
+
+            <Row
+              label="Abdômen"
+              value={`${assessment.abdomen} cm`}
+            />
+
+          </View>
+
+          <Text style={styles.sectionTitle}>
+            Medidas corporais
+          </Text>
+
+          <View>
+
+            <Row label="Quadril" value={`${assessment.hip} cm`} />
+            <Row label="Braço Direito" value={`${assessment.right_arm} cm`} />
+            <Row label="Braço Esquerdo" value={`${assessment.left_arm} cm`} />
+            <Row label="Antebraço Direito" value={`${assessment.right_forearm} cm`} />
+            <Row label="Antebraço Esquerdo" value={`${assessment.left_forearm} cm`} />
+            <Row label="Coxa Direita" value={`${assessment.right_thigh} cm`} />
+            <Row label="Coxa Esquerda" value={`${assessment.left_thigh} cm`} />
+            <Row label="Panturrilha Direita" value={`${assessment.right_calf} cm`} />
+            <Row label="Panturrilha Esquerda" value={`${assessment.left_calf} cm`} />
+
+          </View>
+
+          <Text
+            style={{
+              position: "absolute",
+              bottom: 15,
+              left: 0,
+              right: 0,
+              textAlign: "center",
+              fontSize: 10,
+              color: "#94a3b8",
+            }}
+          >
+            Relatório de Avaliação Física
+          </Text>
 
       </Page>
 
@@ -149,34 +193,6 @@ export default function AssessmentPdfDocument({
 
       {/* Página 2 */}
       <Page size="A4" style={styles.page}>
-
-
-        <Text style={styles.sectionTitle}>
-          Medidas corporais
-        </Text>
-
-
-        <View style={styles.grid}>
-
-          <Info title="Quadril" value={`${assessment.hip} cm`} />
-
-          <Info title="Braço Direito" value={`${assessment.right_arm} cm`} />
-
-          <Info title="Braço Esquerdo" value={`${assessment.left_arm} cm`} />
-
-          <Info title="Antebraço Direito" value={`${assessment.right_forearm} cm`} />
-
-          <Info title="Antebraço Esquerdo" value={`${assessment.left_forearm} cm`} />
-
-          <Info title="Coxa Direita" value={`${assessment.right_thigh} cm`} />
-
-          <Info title="Coxa Esquerda" value={`${assessment.left_thigh} cm`} />
-
-          <Info title="Panturrilha Direita" value={`${assessment.right_calf} cm`} />
-
-          <Info title="Panturrilha Esquerda" value={`${assessment.left_calf} cm`} />
-
-        </View>
 
 
         <Text style={styles.sectionTitle}>
@@ -190,6 +206,19 @@ export default function AssessmentPdfDocument({
           </Text>
         </View>
 
+        <Text
+        style={{
+          position: "absolute",
+          bottom: 15,
+          left: 0,
+          right: 0,
+          textAlign: "center",
+          fontSize: 10,
+          color: "#94a3b8",
+        }}
+      >
+        Relatório de Avaliação Física
+      </Text>
 
       </Page>
 
@@ -203,6 +232,21 @@ export default function AssessmentPdfDocument({
           Fotos da avaliação
         </Text>
 
+        <View
+          style={{
+            marginBottom: 10,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+
+          <Text>Frente</Text>
+
+          <Text>Lado</Text>
+
+          <Text>Costas</Text>
+
+        </View>
 
         <View style={styles.photos}>
 
@@ -231,6 +275,19 @@ export default function AssessmentPdfDocument({
 
         </View>
 
+          <Text
+          style={{
+            position: "absolute",
+            bottom: 15,
+            left: 0,
+            right: 0,
+            textAlign: "center",
+            fontSize: 10,
+            color: "#94a3b8",
+          }}
+        >
+          Relatório de Avaliação Física
+        </Text>
 
       </Page>
 
@@ -241,29 +298,39 @@ export default function AssessmentPdfDocument({
 }
 
 
-
-function Info({
-  title,
+function Row({
+  label,
   value,
 }: {
-  title:string;
-  value:string;
+  label: string;
+  value: string;
 }) {
-
   return (
-
-    <View style={styles.card}>
-
-      <Text style={styles.label}>
-        {title}
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        borderBottom: "1 solid #e5e7eb",
+        paddingVertical: 6,
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 12,
+          color: "#64748b",
+        }}
+      >
+        {label}
       </Text>
 
-      <Text style={styles.value}>
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: "bold",
+        }}
+      >
         {value}
       </Text>
-
     </View>
-
   );
-
 }
