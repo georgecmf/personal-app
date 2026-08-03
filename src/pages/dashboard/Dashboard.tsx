@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate,} from "react-router-dom";
+import { Plus } from "lucide-react";
 import {
   Users,
   Dumbbell,
@@ -13,6 +15,8 @@ import { getAllExercises } from "../../services/exercises";
 
 function Dashboard() {
   const { user } = useAuth();
+
+  const navigate = useNavigate();
 
   const [students, setStudents] = useState(0);
   const [workouts, setWorkouts] = useState(0);
@@ -38,16 +42,23 @@ function Dashboard() {
     <div>
       <div className="mb-10">
         <h1 className="text-5xl font-bold mb-2">
-          Dashboard
+          Painel
         </h1>
 
+        <h2 className="text-2xl font-semibold text-white mb-2">
+          Bem-vindo de volta!
+        </h2>
+
         <p className="text-slate-400">
-          Gerencie seus alunos, treinos e exercícios em um único lugar.
+          Gerencie seus alunos, avaliações e treinos em um único lugar.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-green-400 hover:scale-[1.02] transition-all duration-300">
+        <div
+          onClick={() => navigate("/students")}
+          className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-green-400 hover:scale-[1.02] hover:shadow-xl cursor-pointer transition-all duration-300 active:scale-95"
+        >
           <h2 className="text-slate-400 text-sm">
             Total de alunos
           </h2>
@@ -68,7 +79,10 @@ function Dashboard() {
           </p>
         </div>
 
-        <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-green-400 hover:scale-[1.02] transition-all duration-300">
+        <div
+          onClick={() => navigate("/students")}
+          className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-green-400 hover:scale-[1.02] hover:shadow-xl cursor-pointer transition-all duration-300 active:scale-95"
+        >
           <h2 className="text-slate-400 text-sm">
             Total de treinos
           </h2>
@@ -89,7 +103,10 @@ function Dashboard() {
           </p>
         </div>
 
-        <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-green-400 hover:scale-[1.02] transition-all duration-300">
+        <div
+          onClick={() => navigate("/students")}
+          className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-green-400 hover:scale-[1.02] hover:shadow-xl cursor-pointer transition-all duration-300 active:scale-95"
+        >
           <h2 className="text-slate-400 text-sm">
             Total de exercícios
           </h2>
@@ -110,6 +127,70 @@ function Dashboard() {
           </p>
         </div>
       </div>
+      <div className="mt-12">
+  <h2 className="text-2xl font-bold mb-6">
+    Ações rápidas
+  </h2>
+
+  <div className="grid md:grid-cols-3 gap-5">
+
+    <button
+      onClick={() => navigate("/students?new=true")}
+      className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 transition-all text-left"
+    >
+      <Plus
+        className="text-green-400 mb-4"
+        size={36}
+      />
+
+      <h3 className="text-xl font-bold">
+        Novo aluno
+      </h3>
+
+      <p className="text-slate-400 mt-2">
+        Cadastre um novo aluno.
+      </p>
+    </button>
+
+    <button
+      onClick={() => navigate("/students")}
+      className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 transition-all text-left"
+    >
+      <Activity
+        className="text-green-400 mb-4"
+        size={36}
+      />
+
+      <h3 className="text-xl font-bold">
+        Nova avaliação
+      </h3>
+
+      <p className="text-slate-400 mt-2">
+        Registre uma avaliação física.
+      </p>
+    </button>
+
+    <button
+      onClick={() => navigate("/students")}
+      className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 transition-all text-left"
+    >
+      <Dumbbell
+        className="text-green-400 mb-4"
+        size={36}
+      />
+
+      <h3 className="text-xl font-bold">
+        Novo treino
+      </h3>
+
+      <p className="text-slate-400 mt-2">
+        Crie um treino para um aluno.
+      </p>
+    </button>
+
+  </div>
+</div>
+
     </div>
   );
 }

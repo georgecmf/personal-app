@@ -2,14 +2,13 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
-  Dumbbell,
   Settings,
 } from "lucide-react";
 
 function Sidebar() {
   return (
     <aside className="w-72 min-h-screen bg-slate-900 border-r border-slate-800 p-6">
-      <h1 className="text-4xl font-bold text-green-400 mb-12">
+      <h1 className="text-4xl font-extrabold text-green-400 tracking-tight mb-12">
         FitPro
       </h1>
 
@@ -40,20 +39,6 @@ function Sidebar() {
   >
     <Users size={22} />
     Alunos
-  </NavLink>
-
-  <NavLink
-    to="/workouts"
-    className={({ isActive }) =>
-      `flex items-center gap-3 p-4 rounded-xl transition ${
-        isActive
-          ? "bg-slate-800 text-green-400"
-          : "text-slate-300 hover:bg-slate-800"
-      }`
-    }
-  >
-    <Dumbbell size={22} />
-    Treinos
   </NavLink>
 
   <NavLink

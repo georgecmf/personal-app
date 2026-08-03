@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ClipboardList, Plus, Trash2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { 
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 
 import NewStudentModal from "../../components/students/NewStudentModal";
 import { useAuth } from "../../hooks/useAuth";
@@ -29,6 +32,8 @@ function Students() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+
   const [openModal, setOpenModal] = useState(false);
 
   const [editingStudent, setEditingStudent] =
@@ -36,23 +41,27 @@ function Students() {
 
   const [students, setStudents] = useState<Student[]>([]);
 
-  async function loadStudents() {
-    console.log("USER:", user);
+  const loadStudents = useCallback(async () => {
+  if (!user) return;
 
-    if (!user) return;
+  const data = await getStudents(user.id);
 
-    const data = await getStudents(user.id);
-
-    console.log("ALUNOS:", data);
-
-    setStudents(data || []);
-  }
+  setStudents(data || []);
+}, [user]);
 
   useEffect(() => {
-    if (user) {
-      loadStudents();
-    }
-  }, [user]);
+  loadStudents();
+}, [loadStudents]);
+
+  useEffect(() => {
+  if (searchParams.get("new") === "true") {
+    setEditingStudent(null);
+    setOpenModal(true);
+
+    navigate("/students", { replace: true });
+
+  }
+}, [searchParams, navigate]);
 
   async function addStudent(student: Student) {
     if (editingStudent) {
