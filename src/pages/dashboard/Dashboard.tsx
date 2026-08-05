@@ -155,10 +155,11 @@ function Dashboard() {
     </button>
 
     {/* Nova avaliação */}
-    <button
-      onClick={() => navigate("/students")}
-      className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 transition-all text-left"
-    >
+   {/* Nova avaliação */}
+      <button
+        onClick={() => navigate("/students/select/assessment")}
+        className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 transition-all text-left"
+      >
       <Activity
         className="text-green-400 mb-4"
         size={36}
