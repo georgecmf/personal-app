@@ -17,6 +17,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import WorkoutExercises from "./pages/workouts/WorkoutExercises";
 import StudentProfile from "./pages/students/StudentProfile";
 import StudentAssessments from "./pages/assessments/StudentAssessments";
+import SelectStudentForWorkout from "./pages/students/SelectStudentForWorkout";
 
 
 function App() {
@@ -49,6 +50,11 @@ function App() {
             <Route
               path="/students/:studentId"
               element={<StudentProfile />}
+            />
+
+            <Route
+              path="/students/select/workout"
+              element={<SelectStudentForWorkout />}
             />
 
             <Route

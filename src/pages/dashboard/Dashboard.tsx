@@ -127,6 +127,7 @@ function Dashboard() {
           </p>
         </div>
       </div>
+      
       <div className="mt-12">
   <h2 className="text-2xl font-bold mb-6">
     Ações rápidas
@@ -134,6 +135,7 @@ function Dashboard() {
 
   <div className="grid md:grid-cols-3 gap-5">
 
+    {/* Novo aluno */}
     <button
       onClick={() => navigate("/students?new=true")}
       className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 transition-all text-left"
@@ -152,6 +154,7 @@ function Dashboard() {
       </p>
     </button>
 
+    {/* Nova avaliação */}
     <button
       onClick={() => navigate("/students")}
       className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 transition-all text-left"
@@ -170,8 +173,9 @@ function Dashboard() {
       </p>
     </button>
 
+    {/* Novo treino */}
     <button
-      onClick={() => navigate("/students")}
+      onClick={() => navigate("/students/select/workout")}
       className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 transition-all text-left"
     >
       <Dumbbell
@@ -190,8 +194,7 @@ function Dashboard() {
 
   </div>
 </div>
-
-    </div>
+</div>
   );
 }
 
