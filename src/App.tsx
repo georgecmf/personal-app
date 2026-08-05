@@ -9,7 +9,6 @@ import MainLayout from "./layouts/MainLayout";
 
 import Dashboard from "./pages/dashboard/Dashboard";
 import Students from "./pages/students/Students";
-import Workouts from "./pages/workouts/Workouts";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import StudentWorkouts from "./pages/workouts/StudentWorkouts";
@@ -78,19 +77,17 @@ function App() {
               element={<StudentAssessments />}
             />
 
-            <Route
-              path="/workouts"
-              element={<Workouts />}
-             />
-            </Route>
-
-            <Route
+              <Route
               path="*"
               element={<Navigate to="/" />}
-              />
-              </Routes>
-              </BrowserRouter>
-              );
-            }
+            />
 
-            export default App;
+          </Route>
+
+        </Routes>
+
+      </BrowserRouter>
+  );
+}
+
+export default App;

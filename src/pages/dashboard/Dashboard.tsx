@@ -80,7 +80,7 @@ function Dashboard() {
         </div>
 
         <div
-          onClick={() => navigate("/students")}
+          onClick={() => navigate("//students/select/workout")}
           className="bg-slate-900 rounded-2xl p-6 border border-slate-800 hover:border-green-400 hover:scale-[1.02] hover:shadow-xl cursor-pointer transition-all duration-300 active:scale-95"
         >
           <h2 className="text-slate-400 text-sm">

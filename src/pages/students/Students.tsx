@@ -41,6 +41,8 @@ function Students() {
 
   const [students, setStudents] = useState<Student[]>([]);
 
+  const [search, setSearch] = useState("");
+
   const loadStudents = useCallback(async () => {
   if (!user) return;
 
@@ -109,6 +111,12 @@ function Students() {
     setOpenModal(true);
   }
 
+  const filteredStudents = students.filter((student) =>
+  student.name
+    .toLowerCase()
+    .includes(search.toLowerCase())
+);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -134,9 +142,18 @@ function Students() {
         </button>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-6">
+
+        <input
+          type="text"
+          placeholder="Buscar aluno pelo nome..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full mb-6 bg-slate-800 border border-slate-700 rounded-xl px-5 py-3 text-white outline-none focus:border-green-400"
+        />
+
         <p className="mb-4">
-          Total de alunos: {students.length}
+          Total de alunos: {filteredStudents.length}
         </p>
 
         <table className="w-full">
@@ -161,7 +178,7 @@ function Students() {
           </thead>
 
           <tbody>
-            {students.map((student) => (
+             {filteredStudents.map((student) => (
               <tr
                 key={student.id}
                 className="border-t border-slate-800 hover:bg-slate-800/40 transition"
@@ -222,6 +239,17 @@ function Students() {
                 </td>
               </tr>
             ))}
+
+            {filteredStudents.length === 0 && (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="p-8 text-center text-slate-500"
+                >
+                  Nenhum aluno encontrado.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
