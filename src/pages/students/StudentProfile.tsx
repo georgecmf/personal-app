@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import Button from "../../components/ui/Button";
-
 import { useAuth } from "../../hooks/useAuth";
 import {
   getStudentById,
@@ -195,22 +193,21 @@ function StudentProfile() {
 
         <div className="flex gap-4">
 
-          <Button
+          <button
             onClick={() =>
               navigate(`/students/${student.id}/workouts`)
             }
           >
             🏋️ Treinos do aluno
-          </Button>
+          </button>
 
-          <Button
-            variant="secondary"
+          <button
             onClick={() =>
               navigate(`/students/${student.id}/assessments`)
             }
           >
             📋 Avaliações físicas
-          </Button>
+          </button>
 
         </div>
 

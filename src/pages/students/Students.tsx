@@ -14,6 +14,9 @@ import {
   updateStudent,
 } from "../../services/students";
 
+import Button from "../../components/ui/Button";
+import Badge from "../../components/ui/Badge";
+
 type Student = {
   id: number;
   name: string;
@@ -130,16 +133,15 @@ function Students() {
           </p>
         </div>
 
-        <button
+       <Button
+          icon={<Plus size={20} />}
           onClick={() => {
             setEditingStudent(null);
             setOpenModal(true);
           }}
-          className="flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
         >
-          <Plus size={20} />
           Novo aluno
-        </button>
+        </Button>
       </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-6">
@@ -197,9 +199,9 @@ function Students() {
                 </td>
 
                 <td className="p-5">
-                  <span className="bg-green-400/20 text-green-400 px-3 py-1 rounded-lg text-sm">
+                  <Badge>
                     {student.plan}
-                  </span>
+                  </Badge>
                 </td>
 
                 <td className="p-5">

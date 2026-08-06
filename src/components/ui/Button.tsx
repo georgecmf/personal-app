@@ -1,42 +1,55 @@
-type ButtonProps = {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: "primary" | "secondary" | "danger";
-  type?: "button" | "submit";
-};
+import type {
+  ButtonHTMLAttributes,
+  ReactNode,
+} from "react";
 
-export default function Button({
+type ButtonProps =
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    children: ReactNode;
+    variant?: "primary" | "secondary" | "danger";
+    icon?: ReactNode;
+  };
+
+function Button({
   children,
-  onClick,
+  icon,
   variant = "primary",
-  type = "button",
+  className = "",
+  ...props
 }: ButtonProps) {
-
-  const styles = {
+  const variants = {
     primary:
       "bg-green-400 text-slate-950 hover:opacity-90",
 
     secondary:
-      "bg-blue-400 text-slate-950 hover:opacity-90",
+      "bg-slate-700 text-white hover:bg-slate-600",
 
     danger:
-      "bg-red-500 text-white hover:opacity-90",
+      "bg-red-500 text-white hover:bg-red-600",
   };
 
   return (
     <button
-      type={type}
-      onClick={onClick}
+      {...props}
       className={`
+        inline-flex
+        items-center
+        justify-center
+        gap-2
         px-5
         py-3
         rounded-xl
         font-bold
-        transition
-        ${styles[variant]}
+        transition-all
+        duration-200
+        ${variants[variant]}
+        ${className}
       `}
     >
+      {icon}
       {children}
     </button>
   );
 }
+
+export default Button;
