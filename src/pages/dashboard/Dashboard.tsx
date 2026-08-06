@@ -44,7 +44,7 @@ function Dashboard() {
   return (
     <div>
       <div className="mb-10">
-        <h1 className="text-5xl font-bold mb-2">
+        <h1 className="text-3xl md:text-5xl font-bold mb-3">
           Painel
         </h1>
 

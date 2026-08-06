@@ -56,7 +56,7 @@ function Sidebar() {
   ];
 
   return (
-    <aside className="w-56 min-h-screen bg-slate-900 border-r border-slate-800 p-4">
+   <aside className="w-full md:w-56 md:min-h-screen bg-slate-900 border-b md:border-r border-slate-800 p-6">
 
       <h1 className="text-2xl font-extrabold text-green-400 mb-2">
         FitPro

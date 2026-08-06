@@ -92,7 +92,7 @@ function StudentProfile() {
     return (
     <div>
 
-      <h1 className="text-5xl font-bold mb-2">
+      <h1 className="text-3xl md:text-5xlfont-bold mb-2">
         {student.name}
       </h1>
 
@@ -135,7 +135,7 @@ function StudentProfile() {
       </div>
 
     </div>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           <div>
             <p className="text-slate-500">Telefone</p>
