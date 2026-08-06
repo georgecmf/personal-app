@@ -1,5 +1,9 @@
 import { NavLink, useNavigate } from "react-router-dom";
+
+import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { getProfile } from "../../services/profile";
+
 import {
   LayoutDashboard,
   Users,
@@ -8,6 +12,25 @@ import {
 } from "lucide-react";
 
 function Sidebar() {
+  const { user } = useAuth();
+
+  const [profileName, setProfileName] = useState("");
+
+  useEffect(() => {
+  async function loadProfile() {
+    if (!user) return;
+
+    const data = await getProfile(user.id);
+
+    if (data) {
+      setProfileName(data.name);
+    }
+  }
+
+  loadProfile();
+
+}, [user]);
+
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -35,9 +58,19 @@ function Sidebar() {
   return (
     <aside className="w-56 min-h-screen bg-slate-900 border-r border-slate-800 p-4">
 
-      <h1 className="text-2xl font-extrabold text-green-400 mb-8">
+      <h1 className="text-2xl font-extrabold text-green-400 mb-2">
         FitPro
       </h1>
+
+      <div className="mb-8">
+        <p className="font-bold">
+          {profileName || "Personal"}
+        </p>
+
+        <p className="text-sm text-slate-500">
+          {user?.email}
+        </p>
+      </div>
 
       <p className="text-xs uppercase text-slate-500 mb-3">
         Menu

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 import {
   getProfile,
@@ -11,6 +12,8 @@ import {
 
 function Settings() {
   const { user } = useAuth();
+
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
 
@@ -64,6 +67,8 @@ function Settings() {
     }
 
     alert("Perfil atualizado!");
+
+    navigate("/");
   }
 
 
