@@ -111,7 +111,7 @@ function Sidebar() {
                 await logout();
                 navigate("/login");
             }}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 transition"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 transition cursor-pointer"
               >
             <LogOut size={20} />
             <span className="font-medium">
