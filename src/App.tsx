@@ -18,6 +18,7 @@ import StudentProfile from "./pages/students/StudentProfile";
 import StudentAssessments from "./pages/assessments/StudentAssessments";
 import SelectStudentForWorkout from "./pages/students/SelectStudentForWorkout";
 import SelectStudentForAssessment from "./pages/students/SelectStudentForAssessment";
+import Settings from "./pages/settings/Settings";
 
 
 function App() {
@@ -75,6 +76,11 @@ function App() {
             <Route
               path="/students/:studentId/assessments"
               element={<StudentAssessments />}
+            />
+
+            <Route
+              path="/settings"
+              element={<Settings />}
             />
 
               <Route

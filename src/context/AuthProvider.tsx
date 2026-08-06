@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 
 import { supabase } from "../services/supabase";
+import { signOut } from "../services/auth";
 import { AuthContext } from "./AuthContext";
 
 type Props = {
@@ -17,6 +18,11 @@ export function AuthProvider({
 
   const [loading, setLoading] =
     useState(true);
+
+  async function logout() {
+    await signOut();
+    setUser(null);
+  }
 
   useEffect(() => {
     async function loadUser() {
@@ -47,6 +53,7 @@ export function AuthProvider({
       value={{
         user,
         loading,
+        logout,
       }}
     >
       {children}
