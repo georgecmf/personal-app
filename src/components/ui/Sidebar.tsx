@@ -2,8 +2,6 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
-  Dumbbell,
-  Activity,
 } from "lucide-react";
 
 function Sidebar() {
@@ -18,16 +16,7 @@ function Sidebar() {
       path: "/students",
       icon: Users,
     },
-    {
-      name: "Novo treino",
-      path: "/students/select/workout",
-      icon: Dumbbell,
-    },
-    {
-      name: "Nova avaliação",
-      path: "/students/select/assessment",
-      icon: Activity,
-    },
+    
   ];
 
   return (
