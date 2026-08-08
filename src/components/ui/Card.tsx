@@ -25,7 +25,8 @@ function Card({
         border
         border-slate-800
         rounded-2xl
-        p-6
+        p-7
+        md:p-8
         transition-all
         duration-300
         ${
@@ -40,7 +41,7 @@ function Card({
       </h2>
 
       {value !== undefined && (
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center justify-between mt-6">
           {icon}
 
           <p className="text-5xl font-bold text-green-400">

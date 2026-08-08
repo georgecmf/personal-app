@@ -7,7 +7,7 @@ import {
 
 function Sidebar() {
   return (
-    <aside className="hidden md:block w-60 min-h-screen bg-slate-900 border-r border-slate-800 p-5">
+    <aside className="w-56 min-h-screen bg-slate-900 border-r border-slate-800 p-4">
       <h1 className="text-4xl font-extrabold text-green-400 tracking-tight mb-12">
         FitPro
       </h1>

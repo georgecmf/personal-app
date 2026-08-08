@@ -42,7 +42,7 @@ function Dashboard() {
   }, [user]);
 
   return (
-    <div>
+    <div className="text-green-500">
       <div className="mb-10">
         <h1 className="text-3xl md:text-5xl font-bold mb-3">
           Painel
@@ -57,7 +57,7 @@ function Dashboard() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mt-8">
 
       <Card
         title="Total de alunos"
@@ -101,9 +101,9 @@ function Dashboard() {
     </div>
       
       <div className="mt-12">
-  <h2 className="text-2xl font-bold mb-6">
-    Ações rápidas
-  </h2>
+        <h2 className="text-2xl font-bold mb-6">
+          Ações rápidas
+        </h2>
 
   <div className="grid md:grid-cols-3 gap-5">
 

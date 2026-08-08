@@ -16,9 +16,20 @@ function ActionCard({
   return (
     <button
       onClick={onClick}
-      className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-green-400 hover:scale-[1.02] transition-all text-left"
+      className="
+        w-full
+        text-left
+        bg-slate-900
+        border border-slate-800
+        rounded-2xl
+        p-6
+        md:p-8
+        hover:bg-slate-800/60
+        transition
+        cursor-pointer
+      "
     >
-      <div className="text-green-400 mb-4">
+      <div className="mb-5">
         {icon}
       </div>
 
@@ -26,7 +37,7 @@ function ActionCard({
         {title}
       </h3>
 
-      <p className="text-slate-400 mt-2">
+      <p className="text-slate-400 mt-3">
         {description}
       </p>
     </button>
