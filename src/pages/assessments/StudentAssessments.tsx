@@ -147,7 +147,7 @@ async function removeAssessment(id: number) {
             setEditingAssessment(null);
             setOpenModal(true);
           }}
-          className="flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
+          className="cursor-pointer flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
         >
           <Plus size={20} />
           Nova avaliação
@@ -190,7 +190,7 @@ async function removeAssessment(id: number) {
       <div className="mt-6 flex gap-3">
         <button
           onClick={() => setSelectedAssessment(assessment)}
-          className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition"
+          className="cursor-pointer bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition"
         >
           Ver detalhes
         </button>
@@ -209,7 +209,7 @@ async function removeAssessment(id: number) {
             setComparisonCurrent(assessment);
             setComparisonPrevious(assessments[index + 1]);
           }}
-          className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl"
+          className="cursor-pointer bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl"
         >
           Comparar
         </button>
@@ -219,14 +219,14 @@ async function removeAssessment(id: number) {
             setEditingAssessment(assessment);
             setOpenModal(true);
           }}
-          className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 px-4 py-2 rounded-xl font-bold"
+          className="cursor-pointer bg-yellow-500 hover:bg-yellow-400 text-slate-950 px-4 py-2 rounded-xl font-bold"
         >
           Editar
         </button>
 
         <button
           onClick={() => removeAssessment(assessment.id!)}
-          className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-xl"
+          className="cursor-pointer bg-red-600 hover:bg-red-500 px-4 py-2 rounded-xl"
         >
           Excluir
         </button>

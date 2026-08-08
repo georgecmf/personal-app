@@ -115,6 +115,7 @@ function handleEditExercise(exercise: Exercise) {
                 setEditingExercise(null);
                 setOpenModal(true);
               }}
+              className="cursor-pointer bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:bg-green-300 transition"
             >
             <Plus size={20} />
             Novo exercício
@@ -135,14 +136,14 @@ function handleEditExercise(exercise: Exercise) {
               <div className="flex gap-2">
                 <button
                   onClick={() => handleEditExercise(exercise)}
-                  className="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg"
+                  className="cursor-pointer bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg"
                 >
                   <Pencil size={18} />
                 </button>
 
                 <button
                   onClick={() => handleDeleteExercise(exercise.id)}
-                  className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg"
+                  className="cursor-pointer bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg"
                 >
                   <Trash2 size={18} />
                 </button>

@@ -99,14 +99,14 @@ function StudentWorkouts() {
             setEditingWorkout(null);
             setOpenModal(true);
           }}
-          className="flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
+          className="cursor-pointer flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
         >
           <Plus size={20} />
           Novo treino
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="cursor-pointer space-y-4">
         {workouts.map((workout) => (
           <div
             key={workout.id}
@@ -125,7 +125,7 @@ function StudentWorkouts() {
             <div className="flex gap-3">
               <button
                 onClick={() => handleEditWorkout(workout)}
-                className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
+                className="cursor-pointer px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
               >
                 Editar
               </button>
@@ -136,7 +136,7 @@ function StudentWorkouts() {
                     `/students/${studentId}/workouts/${workout.id}`
                   )
                 }
-                className="px-4 py-2 rounded-lg bg-green-500 text-slate-950 font-bold hover:opacity-90 transition"
+                className="cursor-pointer px-4 py-2 rounded-lg bg-green-500 text-slate-950 font-bold hover:opacity-90 transition"
               >
                 Exercícios
               </button>
@@ -145,7 +145,7 @@ function StudentWorkouts() {
                 onClick={() =>
                   handleDeleteWorkout(workout.id)
                 }
-                className="px-4 py-2 rounded-lg bg-red-500 hover:opacity-90 transition"
+                className="cursor-pointer px-4 py-2 rounded-lg bg-red-500 hover:opacity-90 transition"
               >
                 Excluir
               </button>

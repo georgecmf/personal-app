@@ -38,14 +38,14 @@ function AssessmentDetailsModal({
               `avaliacao-${assessment.assessment_date}`
             );
           }}
-          className="bg-green-500 hover:bg-green-400 text-slate-950 px-4 py-2 rounded-xl font-bold"
+          className="cursor-pointer bg-green-500 hover:bg-green-400 text-slate-950 px-4 py-2 rounded-xl font-bold"
         >
           Gerar PDF
         </button>
 
         <button
           onClick={onClose}
-          className="text-slate-400 hover:text-white text-2xl"
+          className="cursor pointer text-slate-400 hover:text-white text-2xl"
         >
           ✕
         </button>

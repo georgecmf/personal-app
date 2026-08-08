@@ -57,7 +57,7 @@ function Login() {
           <button
             onClick={handleLogin}
             disabled={loading}
-            className="bg-green-400 text-slate-950 font-bold p-4 rounded-xl hover:opacity-90 transition"
+            className="cursor-pointer bg-green-400 text-slate-950 font-bold p-4 rounded-xl hover:opacity-90 transition"
           >
             {loading ? "Entrando..." : "Entrar"}
           </button>

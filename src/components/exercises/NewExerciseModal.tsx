@@ -125,7 +125,7 @@ if (!open) return null;
 
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-lg bg-slate-700"
+            className="cursor-pointer px-5 py-2 rounded-lg bg-slate-700"
           >
             Cancelar
           </button>
@@ -141,7 +141,7 @@ if (!open) return null;
                 notes,
               });
             }}
-            className="px-5 py-2 rounded-lg bg-green-400 text-slate-950 font-bold"
+            className="cursor-pointer px-5 py-2 rounded-lg bg-green-400 text-slate-950 font-bold"
           >
             Salvar
           </button>

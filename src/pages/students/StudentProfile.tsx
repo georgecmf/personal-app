@@ -197,6 +197,7 @@ function StudentProfile() {
             onClick={() =>
               navigate(`/students/${student.id}/workouts`)
             }
+            className="cursor-pointer bg-green-400 text-slate-950 px-5 py-3 rounded-xl font-bold hover:bg-green-300 transition"
           >
             🏋️ Treinos do aluno
           </button>
@@ -205,6 +206,7 @@ function StudentProfile() {
             onClick={() =>
               navigate(`/students/${student.id}/assessments`)
             }
+            className="cursor-pointer bg-green-400 text-slate-950 px-5 py-3 rounded-xl font-bold hover:bg-green-300 transition"
           >
             📋 Avaliações físicas
           </button>

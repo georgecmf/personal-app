@@ -110,7 +110,7 @@ useEffect(() => {
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center">
 
-      <div className="bg-slate-900 rounded-2xl p-8 w-[500px]">
+      <div className="bg-slate-900 rounded-2xl p-8 w-[500px] max-h-[90vh] overflow-y-auto">
 
         <h2 className="text-3xl font-bold mb-6">
           {assessment ? "Editar Avaliação" : "Nova Avaliação"}
@@ -298,7 +298,7 @@ useEffect(() => {
 
           <button
             onClick={onClose}
-            className="px-5 py-3 rounded-xl bg-slate-700"
+            className="cursor-pointer px-5 py-3 rounded-xl bg-slate-700"
           >
             Cancelar
           </button>
@@ -338,7 +338,7 @@ useEffect(() => {
               backPhoto
             )
           }
-            className="px-5 py-3 rounded-xl bg-green-400 text-slate-950 font-bold"
+            className="cursor-pointer px-5 py-3 rounded-xl bg-green-400 text-slate-950 font-bold"
           >
             Salvar
           </button>

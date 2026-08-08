@@ -54,7 +54,7 @@ function NewWorkoutModal({
         <div className="flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition"
+            className="cursor-pointer px-5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition"
           >
             Cancelar
           </button>
@@ -63,7 +63,7 @@ function NewWorkoutModal({
             onClick={async () => {
               await onSave(name);
             }}
-            className="px-5 py-2 rounded-lg bg-green-500 font-bold text-slate-900 hover:opacity-90 transition"
+            className="cursor-pointer px-5 py-2 rounded-lg bg-green-500 font-bold text-slate-900 hover:opacity-90 transition"
           >
             Salvar
           </button>

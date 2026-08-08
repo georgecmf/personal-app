@@ -210,7 +210,7 @@ function Students() {
                       onClick={() =>
                         handleEditStudent(student)
                       }
-                      className="text-blue-400 hover:text-blue-300 transition"
+                      className="cursor-pointer text-blue-400 hover:text-blue-300 transition"
                       title="Editar aluno"
                     >
                       ✏️
@@ -222,7 +222,7 @@ function Students() {
                           `/students/${student.id}/workouts`
                         )
                       }
-                      className="text-green-400 hover:text-green-300 transition"
+                      className="cursor-pointer text-green-400 hover:text-green-300 transition"
                       title="Treinos"
                     >
                       <ClipboardList size={20} />
@@ -232,7 +232,7 @@ function Students() {
                       onClick={() =>
                         deleteStudent(student.id)
                       }
-                      className="text-red-400 hover:text-red-300 transition"
+                      className="cursor-pointer text-red-400 hover:text-red-300 transition"
                       title="Excluir aluno"
                     >
                       <Trash2 size={20} />

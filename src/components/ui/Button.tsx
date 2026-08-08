@@ -42,6 +42,7 @@ function Button({
         font-bold
         transition-all
         duration-200
+        cursor-pointer
         ${variants[variant]}
         ${className}
       `}

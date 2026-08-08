@@ -92,7 +92,7 @@ function NewStudentModal({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-lg">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-bold">
             {editingStudent ? "Editar aluno" : "Novo aluno"}
@@ -100,7 +100,7 @@ function NewStudentModal({
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white text-xl"
+            className="cursor-pointer text-slate-400 hover:text-white text-xl"
           >
             ✕
           </button>
@@ -191,7 +191,7 @@ function NewStudentModal({
 
           <button
             onClick={handleSaveStudent}
-            className="bg-green-400 text-slate-950 font-bold p-4 rounded-xl hover:opacity-90 transition"
+            className="cursor-pointer bg-green-400 text-slate-950 font-bold p-4 rounded-xl hover:opacity-90 transition"
           >
             {editingStudent ? "Salvar alterações" : "Salvar aluno"}
           </button>

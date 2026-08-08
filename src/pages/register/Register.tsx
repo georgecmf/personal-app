@@ -59,7 +59,7 @@ function Register() {
           <button
             onClick={handleRegister}
             disabled={loading}
-            className="bg-green-400 text-slate-950 font-bold p-4 rounded-xl"
+            className="cursor-pointer bg-green-400 text-slate-950 font-bold p-4 rounded-xl"
           >
             {loading ? "Criando..." : "Criar conta"}
           </button>
