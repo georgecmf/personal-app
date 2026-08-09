@@ -55,7 +55,7 @@ function AssessmentCharts({ assessments }: Props) {
         Evolução Física
       </h2>
 
-    <div className="grid grid-cols-3 gap-6 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
 
   <div className="bg-slate-800 rounded-xl p-5">
     <p className="text-slate-400">

@@ -158,7 +158,7 @@ function Students() {
           Total de alunos: {filteredStudents.length}
         </p>
 
-        <table className="w-full">
+        <table className="w-full table-fixed">
           <thead className="bg-slate-800">
             <tr>
               <th className="text-left p-5">

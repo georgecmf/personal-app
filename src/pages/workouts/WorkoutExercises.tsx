@@ -99,7 +99,7 @@ function handleEditExercise(exercise: Exercise) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-5xl font-bold mb-2">
             Exercícios
@@ -115,7 +115,7 @@ function handleEditExercise(exercise: Exercise) {
                 setEditingExercise(null);
                 setOpenModal(true);
               }}
-              className="cursor-pointer bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:bg-green-300 transition"
+              className="cursor-pointer w-fit flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-4 py-2 rounded-xl hover:bg-green-300 transition"
             >
             <Plus size={20} />
             Novo exercício

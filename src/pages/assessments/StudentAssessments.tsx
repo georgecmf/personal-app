@@ -129,9 +129,21 @@ async function removeAssessment(id: number) {
   await loadAssessments();
 }
 
+const sortedAssessments = [...assessments].sort((a, b) => {
+  const dateDifference =
+    new Date(b.assessment_date).getTime() -
+    new Date(a.assessment_date).getTime();
+
+  if (dateDifference !== 0) {
+    return dateDifference;
+  }
+
+  return (b.id ?? 0) - (a.id ?? 0);
+});
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-5xl font-bold">
             Avaliações Físicas
@@ -147,7 +159,7 @@ async function removeAssessment(id: number) {
             setEditingAssessment(null);
             setOpenModal(true);
           }}
-          className="cursor-pointer flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-5 py-3 rounded-xl hover:opacity-90 transition"
+          className="cursor-pointer w-fit flex items-center gap-2 bg-green-400 text-slate-950 font-bold px-4 py-2 rounded-xl hover:opacity-90 transition"
         >
           <Plus size={20} />
           Nova avaliação
@@ -159,86 +171,99 @@ async function removeAssessment(id: number) {
         />
 
       <div className="space-y-4">
-  {assessments.map((assessment) => (
-    <div
-      key={assessment.id}
-      className="bg-slate-900 border border-slate-800 rounded-2xl p-6"
-    >
-      <h2 className="text-2xl font-bold">
-        {new Date(
-          assessment.assessment_date
-        ).toLocaleDateString("pt-BR")}
-      </h2>
+        {assessments.map((assessment) => {
+          const index = sortedAssessments.findIndex(
+            (a) => a.id === assessment.id
+          );
 
-      <div className="mt-4 grid grid-cols-3 gap-6">
-        <div>
-          <p className="text-slate-500">Peso</p>
-          <p>{assessment.weight || "-"} kg</p>
-        </div>
+          const hasPrevious =
+            index !== -1 &&
+            index < sortedAssessments.length - 1;
 
-        <div>
-          <p className="text-slate-500">% Gordura</p>
-          <p>{assessment.body_fat || "-"}%</p>
-        </div>
+          return (
+            <div
+              key={assessment.id}
+              className="bg-slate-900 border border-slate-800 rounded-2xl p-6"
+            >
+              <h2 className="text-2xl font-bold">
+                {new Date(
+                  assessment.assessment_date
+                ).toLocaleDateString("pt-BR")}
+              </h2>
 
-        <div>
-          <p className="text-slate-500">Massa muscular</p>
-          <p>{assessment.muscle_mass || "-"} kg</p>
-        </div>
-      </div>
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                  <p className="text-slate-500">Peso</p>
+                  <p>{assessment.weight || "-"} kg</p>
+                </div>
 
-      <div className="mt-6 flex gap-3">
-        <button
-          onClick={() => setSelectedAssessment(assessment)}
-          className="cursor-pointer bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition"
-        >
-          Ver detalhes
-        </button>
+                <div>
+                  <p className="text-slate-500">% Gordura</p>
+                  <p>{assessment.body_fat || "-"}%</p>
+                </div>
 
-        <button
-          onClick={() => {
-            const index = assessments.findIndex(
-              (a) => a.id === assessment.id
-            );
+                <div>
+                  <p className="text-slate-500">
+                    Massa muscular
+                  </p>
+                  <p>{assessment.muscle_mass || "-"} kg</p>
+                </div>
+              </div>
 
-            if (index === assessments.length - 1) {
-              alert("Esta é a primeira avaliação do aluno.");
-              return;
-            }
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button
+                  onClick={() =>
+                    setSelectedAssessment(assessment)
+                  }
+                  className="cursor-pointer bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl transition"
+                >
+                  Ver detalhes
+                </button>
 
-            setComparisonCurrent(assessment);
-            setComparisonPrevious(assessments[index + 1]);
-          }}
-          className="cursor-pointer bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl"
-        >
-          Comparar
-        </button>
+                {hasPrevious && (
+                  <button
+                    onClick={() => {
+                      setComparisonCurrent(
+                        sortedAssessments[index]
+                      );
 
-        <button
-          onClick={() => {
-            setEditingAssessment(assessment);
-            setOpenModal(true);
-          }}
-          className="cursor-pointer bg-yellow-500 hover:bg-yellow-400 text-slate-950 px-4 py-2 rounded-xl font-bold"
-        >
-          Editar
-        </button>
+                      setComparisonPrevious(
+                        sortedAssessments[index + 1]
+                      );
+                    }}
+                    className="cursor-pointer bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl"
+                  >
+                    Comparar
+                  </button>
+                )}
 
-        <button
-          onClick={() => removeAssessment(assessment.id!)}
-          className="cursor-pointer bg-red-600 hover:bg-red-500 px-4 py-2 rounded-xl"
-        >
-          Excluir
-        </button>
-      </div>
+                <button
+                  onClick={() => {
+                    setEditingAssessment(assessment);
+                    setOpenModal(true);
+                  }}
+                  className="cursor-pointer bg-yellow-500 hover:bg-yellow-400 text-slate-950 px-4 py-2 rounded-xl font-bold"
+                >
+                  Editar
+                </button>
 
-    </div>
-  ))}
+                <button
+                  onClick={() =>
+                    removeAssessment(assessment.id!)
+                  }
+                  className="cursor-pointer bg-red-600 hover:bg-red-500 px-4 py-2 rounded-xl"
+                >
+                  Excluir
+                </button>
+              </div>
+            </div>
+          );
+        })}
 
   {assessments.length === 0 && (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-10 text-center text-slate-500">
+    <p className="text-slate-500">
       Nenhuma avaliação cadastrada.
-    </div>
+    </p>
   )}
 </div>
 
