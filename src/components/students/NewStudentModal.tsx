@@ -42,7 +42,7 @@ function NewStudentModal({
     if (!open) return;
 
     if (editingStudent) {
-     setName(editingStudent.name);
+      setName(editingStudent.name);
       setGoal(editingStudent.goal);
       setPlan(editingStudent.plan);
 
@@ -91,10 +91,11 @@ function NewStudentModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-bold">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">
             {editingStudent ? "Editar aluno" : "Novo aluno"}
           </h2>
 
@@ -107,6 +108,7 @@ function NewStudentModal({
         </div>
 
         <div className="flex flex-col gap-4">
+
           <input
             type="text"
             placeholder="Nome do aluno"
@@ -164,13 +166,25 @@ function NewStudentModal({
             className="bg-slate-800 p-4 rounded-xl outline-none"
           />
 
-          <input
-            type="text"
-            placeholder="Objetivo"
+          <select
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
             className="bg-slate-800 p-4 rounded-xl outline-none"
-          />
+          >
+            <option value="">Selecione o objetivo</option>
+            <option value="Perder peso">
+              Perder peso
+            </option>
+            <option value="Ganhar massa muscular">
+              Ganhar massa muscular
+            </option>
+            <option value="Perder gordura">
+              Perder gordura
+            </option>
+            <option value="Ganhar massa muscular e perder gordura">
+              Ganhar massa muscular e perder gordura
+            </option>
+          </select>
 
           <select
             value={plan}
@@ -193,8 +207,11 @@ function NewStudentModal({
             onClick={handleSaveStudent}
             className="cursor-pointer bg-green-400 text-slate-950 font-bold p-4 rounded-xl hover:opacity-90 transition"
           >
-            {editingStudent ? "Salvar alterações" : "Salvar aluno"}
+            {editingStudent
+              ? "Salvar alterações"
+              : "Salvar aluno"}
           </button>
+
         </div>
       </div>
     </div>

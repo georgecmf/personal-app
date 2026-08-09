@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Plus } from "lucide-react";
 
 import { useAuth } from "../../hooks/useAuth";
+import { getStudentById } from "../../services/students";
 
 import {
   getAssessments,
@@ -43,16 +44,27 @@ function StudentAssessments() {
   const [comparisonPrevious, setComparisonPrevious] =
   useState<PhysicalAssessment | null>(null);
 
-  async function loadAssessments() {
-    if (!user || !studentId) return;
+  const [studentGoal, setStudentGoal] = useState("");
 
-    const data = await getAssessments(
-      Number(studentId),
-      user.id
-    );
+ async function loadAssessments() {
+  if (!user || !studentId) return;
 
-    setAssessments(data || []);
+  const data = await getAssessments(
+    Number(studentId),
+    user.id
+  );
+
+  setAssessments(data || []);
+
+  const student = await getStudentById(
+    Number(studentId),
+    user.id
+  );
+
+  if (student) {
+    setStudentGoal(student.goal || "");
   }
+}
 
   useEffect(() => {
     loadAssessments();
@@ -167,8 +179,9 @@ const sortedAssessments = [...assessments].sort((a, b) => {
       </div>
 
       <AssessmentCharts
-          assessments={assessments}
-        />
+        assessments={assessments}
+        goal={studentGoal}
+      />
 
       <div className="space-y-4">
         {assessments.map((assessment) => {
