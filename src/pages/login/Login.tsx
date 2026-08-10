@@ -61,6 +61,15 @@ function Login() {
           >
             {loading ? "Entrando..." : "Entrar"}
           </button>
+
+          <button
+            onClick={() => navigate("/student-login")}
+            className="cursor-pointer w-full border border-slate-700 text-slate-300 font-bold p-4 rounded-xl hover:bg-slate-800 hover:text-white transition"
+          >
+            Entrar como aluno
+          </button>
+
+
         </div>
       </div>
     </div>

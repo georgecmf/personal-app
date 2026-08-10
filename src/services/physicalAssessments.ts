@@ -152,3 +152,22 @@ export async function uploadAssessmentPhoto(
 
   return data.publicUrl;
 }
+
+export async function getAssessmentsForStudent(
+  studentId: number
+) {
+  const { data, error } = await supabase
+    .from("physical_assessments")
+    .select("*")
+    .eq("student_id", studentId)
+    .order("assessment_date", {
+      ascending: false,
+    });
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data;
+}

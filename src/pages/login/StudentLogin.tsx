@@ -11,63 +11,49 @@ function StudentLogin() {
   const [error, setError] = useState("");
 
   async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
+  e.preventDefault();
 
-    setError("");
+  setError("");
 
-    const code = accessCode.trim().toUpperCase();
+  const code = accessCode.trim().toUpperCase();
 
-    if (!code) {
-      setError("Digite seu código de acesso.");
+  if (!code) {
+    setError("Digite seu código de acesso.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const account = await getStudentAccountByCode(code);
+
+    console.log("CÓDIGO DIGITADO:", code);
+    console.log("CONTA ENCONTRADA:", account);
+
+    if (!account) {
+      setError("Código de acesso inválido.");
       return;
     }
 
-    setLoading(true);
+    sessionStorage.setItem(
+      "student_id",
+      String(account.student_id)
+    );
 
-    try {
-      const account = await getStudentAccountByCode(code);
-
-console.log("CÓDIGO DIGITADO:", code);
-console.log("CONTA ENCONTRADA:", account);
-
-if (!account) {
-  setError("Código de acesso inválido.");
-  return;
-}
-
-      if (account.activated) {
-        setError("Este código já foi ativado.");
-        return;
-        }
-
-            sessionStorage.setItem(
-        "student_id",
-        String(account.student_id)
-        );
-
-        sessionStorage.setItem(
-        "student_access_code",
-        code
-        );
+    sessionStorage.setItem(
+      "student_access_code",
+      code
+    );
 
     navigate(`/student/${account.student_id}`);
 
-      console.log("Aluno encontrado:", account);
-
-        sessionStorage.setItem(
-        "student_id",
-        String(account.student_id)
-      );
-
-      navigate(`/student/${account.student_id}`);
-    
-    } catch (error) {
-      console.error(error);
-      setError("Não foi possível realizar o acesso.");
-    } finally {
-      setLoading(false);
-    }
+  } catch (error) {
+    console.error(error);
+    setError("Não foi possível realizar o acesso.");
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">

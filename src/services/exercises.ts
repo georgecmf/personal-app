@@ -99,3 +99,20 @@ export async function getAllExercises(
 
   return data;
 }
+
+export async function getExercisesForStudent(
+  workoutId: number
+) {
+  const { data, error } = await supabase
+    .from("exercises")
+    .select("*")
+    .eq("workout_id", workoutId)
+    .order("id");
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data;
+}

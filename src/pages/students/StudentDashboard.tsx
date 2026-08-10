@@ -46,120 +46,157 @@ function StudentDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-400">
-          Carregando...
-        </p>
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-400">
+        Carregando...
       </div>
     );
   }
 
   if (!student) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-400">
-          Não foi possível carregar os dados do aluno.
-        </p>
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-400 px-4">
+        Não foi possível carregar os dados do aluno.
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-slate-950 text-white px-4 py-6 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
 
-      <div>
-        <h1 className="text-3xl font-bold">
-          Olá, {student.name}! 👋
-        </h1>
+        {/* Cabeçalho */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
-        <p className="text-slate-400 mt-2">
-          Bem-vindo à sua área no FitPro.
-        </p>
-      </div>
+        <div>
+            <h1 className="text-2xl sm:text-3xl font-bold">
+            Olá, {student.name}! 👋
+            </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <p className="text-slate-400">
-            Objetivo
-          </p>
-
-          <p className="text-lg font-bold mt-2">
-            {student.goal || "-"}
-          </p>
+            <p className="text-slate-400 mt-2">
+            Bem-vindo à sua área no FitPro.
+            </p>
         </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <p className="text-slate-400">
-            Plano
-          </p>
-
-          <p className="text-lg font-bold mt-2">
-            {student.plan || "-"}
-          </p>
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <p className="text-slate-400">
-            Peso
-          </p>
-
-          <p className="text-2xl font-bold mt-2">
-            {student.weight ?? "-"}
-            {student.weight !== null && " kg"}
-          </p>
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-          <p className="text-slate-400">
-            Altura
-          </p>
-
-          <p className="text-2xl font-bold mt-2">
-            {student.height ?? "-"}
-            {student.height !== null && " cm"}
-          </p>
-        </div>
-
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
         <button
-          onClick={() =>
-            navigate(`/student/${student.id}/workouts`)
-          }
-          className="cursor-pointer bg-slate-900 border border-slate-800 rounded-2xl p-6 text-left hover:border-green-400 transition"
-        >
-          <h2 className="text-xl font-bold">
-            🏋️ Meus treinos
-          </h2>
+            onClick={() => {
+            sessionStorage.removeItem("student_id");
+            sessionStorage.removeItem("student_access_code");
 
-          <p className="text-slate-400 mt-2">
-            Veja seus treinos e exercícios.
-          </p>
+            navigate("/login", { replace: true });
+            }}
+            className="cursor-pointer w-fit border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition"
+        >
+            Sair
         </button>
 
-        <button
-          onClick={() =>
-            navigate(`/student/${student.id}/assessments`)
-          }
-          className="cursor-pointer bg-slate-900 border border-slate-800 rounded-2xl p-6 text-left hover:border-green-400 transition"
-        >
-          <h2 className="text-xl font-bold">
-            📊 Minha evolução
-          </h2>
+        </div>
 
-          <p className="text-slate-400 mt-2">
-            Acompanhe suas avaliações físicas.
-          </p>
-        </button>
+
+        {/* Informações */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <p className="text-sm text-slate-400">
+              Objetivo
+            </p>
+
+            <p className="text-lg font-bold mt-2">
+              {student.goal || "-"}
+            </p>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <p className="text-sm text-slate-400">
+              Plano
+            </p>
+
+            <p className="text-lg font-bold mt-2">
+              {student.plan || "-"}
+            </p>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <p className="text-sm text-slate-400">
+              Peso
+            </p>
+
+            <p className="text-2xl font-bold mt-2">
+              {student.weight ?? "-"}
+              {student.weight !== null && " kg"}
+            </p>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <p className="text-sm text-slate-400">
+              Altura
+            </p>
+
+            <p className="text-2xl font-bold mt-2">
+              {student.height ?? "-"}
+              {student.height !== null && " cm"}
+            </p>
+          </div>
+
+        </div>
+
+        {/* Acesso rápido */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <button
+            onClick={() =>
+              navigate(`/student/${student.id}/workouts`)
+            }
+            className="group cursor-pointer bg-slate-900 border border-slate-800 rounded-2xl p-6 text-left hover:border-green-400 hover:bg-slate-900/80 transition"
+          >
+            <div className="flex items-center gap-4">
+
+              <div className="w-12 h-12 rounded-xl bg-green-400/10 flex items-center justify-center text-2xl">
+                🏋️
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold group-hover:text-green-400 transition">
+                  Meus treinos
+                </h2>
+
+                <p className="text-slate-400 mt-1">
+                  Veja seus treinos e exercícios.
+                </p>
+              </div>
+
+            </div>
+          </button>
+
+          <button
+            onClick={() =>
+              navigate(`/student/${student.id}/assessments`)
+            }
+            className="group cursor-pointer bg-slate-900 border border-slate-800 rounded-2xl p-6 text-left hover:border-green-400 hover:bg-slate-900/80 transition"
+          >
+            <div className="flex items-center gap-4">
+
+              <div className="w-12 h-12 rounded-xl bg-green-400/10 flex items-center justify-center text-2xl">
+                📊
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold group-hover:text-green-400 transition">
+                  Minha evolução
+                </h2>
+
+                <p className="text-slate-400 mt-1">
+                  Acompanhe suas avaliações físicas.
+                </p>
+              </div>
+
+            </div>
+          </button>
+
+        </div>
 
       </div>
-
     </div>
   );
 }
 
 export default StudentDashboard;
-

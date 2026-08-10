@@ -21,6 +21,9 @@ import SelectStudentForWorkout from "./pages/students/SelectStudentForWorkout";
 import SelectStudentForAssessment from "./pages/students/SelectStudentForAssessment";
 import Settings from "./pages/settings/Settings";
 import StudentDashboard from "./pages/students/StudentDashboard";
+import StudentAreaWorkouts from "./pages/students/StudentWorkouts";
+import StudentWorkoutExercises from "./pages/students/StudentWorkoutExercises";
+import StudentAreaAssessments from "./pages/students/StudentAssessments";
 import StudentRoute from "./routes/StudentRoute";
 
 
@@ -42,6 +45,33 @@ function App() {
           element={
             <StudentRoute>
               <StudentDashboard />
+            </StudentRoute>
+          }
+        />
+
+        <Route
+          path="/student/:studentId/workouts"
+          element={
+            <StudentRoute>
+              <StudentAreaWorkouts />
+            </StudentRoute>
+          }
+        />
+
+        <Route
+          path="/student/:studentId/workouts/:workoutId"
+          element={
+            <StudentRoute>
+              <StudentWorkoutExercises />
+            </StudentRoute>
+          }
+        />
+
+        <Route
+          path="/student/:studentId/assessments"
+          element={
+            <StudentRoute>
+              <StudentAreaAssessments />
             </StudentRoute>
           }
         />

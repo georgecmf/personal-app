@@ -94,3 +94,20 @@ export async function getAllWorkouts(
 
   return data;
 }
+
+export async function getWorkoutsForStudent(
+  studentId: number
+) {
+  const { data, error } = await supabase
+    .from("workouts")
+    .select("*")
+    .eq("student_id", studentId)
+    .order("id");
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data;
+}

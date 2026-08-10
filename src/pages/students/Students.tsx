@@ -222,7 +222,7 @@ function Students() {
                 </td>
 
                 <td className="p-5">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <button
                       onClick={() =>
                         handleEditStudent(student)
@@ -246,6 +246,14 @@ function Students() {
                     </button>
 
                     <button
+                      onClick={() => handleCreateAccess(student)}
+                      className="cursor-pointer text-purple-400 hover:text-purple-300 transition"
+                      title="Gerar acesso do aluno"
+                    >
+                      🔑
+                    </button>
+
+                    <button
                       onClick={() =>
                         deleteStudent(student.id)
                       }
@@ -253,14 +261,6 @@ function Students() {
                       title="Excluir aluno"
                     >
                       <Trash2 size={20} />
-                    </button>
-
-                    <button
-                      onClick={() => handleCreateAccess(student)}
-                      className="cursor-pointer text-purple-400 hover:text-purple-300 transition"
-                      title="Gerar acesso do aluno"
-                    >
-                      🔑
                     </button>
                   </div>
                 </td>
