@@ -12,6 +12,7 @@ import {
   deleteStudent as deleteStudentService,
   getStudents,
   updateStudent,
+  createStudentAccess,
 } from "../../services/students";
 
 import Button from "../../components/ui/Button";
@@ -113,6 +114,22 @@ function Students() {
     setEditingStudent(student);
     setOpenModal(true);
   }
+
+  async function handleCreateAccess(student: Student) {
+  try {
+    const account = await createStudentAccess(
+      student.id,
+      user!.id
+    );
+
+    alert(
+      `Código de acesso do aluno ${student.name}:\n\n${account.access_code}`
+    );
+  } catch (error) {
+    console.error(error);
+    alert("Não foi possível gerar o acesso.");
+  }
+}
 
   const filteredStudents = students.filter((student) =>
   student.name
@@ -236,6 +253,14 @@ function Students() {
                       title="Excluir aluno"
                     >
                       <Trash2 size={20} />
+                    </button>
+
+                    <button
+                      onClick={() => handleCreateAccess(student)}
+                      className="cursor-pointer text-purple-400 hover:text-purple-300 transition"
+                      title="Gerar acesso do aluno"
+                    >
+                      🔑
                     </button>
                   </div>
                 </td>
