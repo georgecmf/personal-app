@@ -209,6 +209,24 @@ export async function getStudentAccountByCode(
     .from("student_accounts")
     .select("*")
     .eq("access_code", accessCode)
+    .maybeSingle();
+
+  if (error) {
+    console.error("ERRO AO BUSCAR CÓDIGO:", error);
+    return null;
+  }
+
+  return data;
+}
+
+
+export async function getStudentByIdForStudent(
+  id: number
+) {
+  const { data, error } = await supabase
+    .from("students")
+    .select("*")
+    .eq("id", id)
     .single();
 
   if (error) {
@@ -217,4 +235,22 @@ export async function getStudentAccountByCode(
   }
 
   return data;
+}
+
+export async function getStudentByAccessCode(
+  accessCode: string
+) {
+  const { data, error } = await supabase.rpc(
+    "get_student_by_access_code",
+    {
+      p_access_code: accessCode,
+    }
+  );
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data?.[0] ?? null;
 }
