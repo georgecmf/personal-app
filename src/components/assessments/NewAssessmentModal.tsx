@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { PhysicalAssessment } from "../../services/physicalAssessments";
 
@@ -11,7 +11,7 @@ type Props = {
     frontPhoto: File | null,
     sidePhoto: File | null,
     backPhoto: File | null
-  ) => void;
+  ) => Promise<void>;
 };
 
 function NewAssessmentModal({
@@ -46,6 +46,12 @@ function NewAssessmentModal({
   const [sidePhoto, setSidePhoto] = useState<File | null>(null);
   const [backPhoto, setBackPhoto] = useState<File | null>(null);
 
+  const frontInputRef = useRef<HTMLInputElement>(null);
+  const sideInputRef = useRef<HTMLInputElement>(null);
+  const backInputRef = useRef<HTMLInputElement>(null);
+
+  const [saving, setSaving] = useState(false);
+
 useEffect(() => {
   if (!assessment) return;
 
@@ -77,9 +83,15 @@ useEffect(() => {
 
   useEffect(() => {
     if (open && !assessment) {
-      setAssessmentDate(
-        new Date().toISOString().split("T")[0]
-      );
+      const today = new Date();
+
+      const localDate = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, "0"),
+        String(today.getDate()).padStart(2, "0"),
+      ].join("-");
+
+      setAssessmentDate(localDate);
 
       setWeight("");
       setBodyFat("");
@@ -238,51 +250,97 @@ useEffect(() => {
             className="w-full p-3 rounded-xl bg-slate-800"
           />
 
-          <div>
-            <label className="block mb-2 font-semibold">
-              Foto Frente
-            </label>
+          <div className="space-y-3">
+            <p className="font-semibold">Fotos da avaliação</p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+              <button
+                type="button"
+                onClick={() => frontInputRef.current?.click()}
+                className={`cursor-pointer p-4 rounded-xl border transition text-left ${
+                  frontPhoto
+                    ? "border-green-400 bg-green-400/10 text-green-400"
+                    : "border-slate-700 bg-slate-800 hover:bg-slate-700"
+                }`}
+              >
+                <div className="font-semibold">
+                  📷 Foto Frente
+                </div>
+
+                <div className="text-xs text-slate-400 mt-1 truncate">
+                  {frontPhoto ? frontPhoto.name : "Selecionar foto"}
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => sideInputRef.current?.click()}
+                className={`cursor-pointer p-4 rounded-xl border transition text-left ${
+                  sidePhoto
+                    ? "border-green-400 bg-green-400/10 text-green-400"
+                    : "border-slate-700 bg-slate-800 hover:bg-slate-700"
+                }`}
+              >
+                <div className="font-semibold">
+                  📷 Foto Lado
+                </div>
+
+                <div className="text-xs text-slate-400 mt-1 truncate">
+                  {sidePhoto ? sidePhoto.name : "Selecionar foto"}
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => backInputRef.current?.click()}
+                className={`cursor-pointer p-4 rounded-xl border transition text-left ${
+                  backPhoto
+                    ? "border-green-400 bg-green-400/10 text-green-400"
+                    : "border-slate-700 bg-slate-800 hover:bg-slate-700"
+                }`}
+              >
+                <div className="font-semibold">
+                  📷 Foto Costas
+                </div>
+
+                <div className="text-xs text-slate-400 mt-1 truncate">
+                  {backPhoto ? backPhoto.name : "Selecionar foto"}
+                </div>
+              </button>
+
+            </div>
 
             <input
+              ref={frontInputRef}
               type="file"
               accept="image/*"
               onChange={(e) =>
                 setFrontPhoto(e.target.files?.[0] || null)
               }
-              className="w-full"
+              className="hidden"
             />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">
-              Foto Lado
-            </label>
 
             <input
+              ref={sideInputRef}
               type="file"
               accept="image/*"
               onChange={(e) =>
                 setSidePhoto(e.target.files?.[0] || null)
               }
-              className="w-full"
+              className="hidden"
             />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">
-              Foto Costas
-            </label>
 
             <input
+              ref={backInputRef}
               type="file"
               accept="image/*"
               onChange={(e) =>
                 setBackPhoto(e.target.files?.[0] || null)
               }
-              className="w-full"
+              className="hidden"
             />
           </div>
-
           <textarea
             placeholder="Observações"
             value={observations}
@@ -304,43 +362,50 @@ useEffect(() => {
           </button>
 
           <button
-            onClick={() =>
-            onSave(
-              {
-                student_id: 0,
-                assessment_date: assessmentDate,
+            disabled={saving}
+            onClick={async () => {
+              setSaving(true);
 
-                weight,
-                body_fat: bodyFat,
-                muscle_mass: muscleMass,
+              try {
+                await onSave(
+                  {
+                    student_id: 0,
+                    assessment_date: assessmentDate,
 
-                chest,
-                waist,
-                abdomen,
-                hip,
+                    weight,
+                    body_fat: bodyFat,
+                    muscle_mass: muscleMass,
 
-                right_arm: rightArm,
-                left_arm: leftArm,
+                    chest,
+                    waist,
+                    abdomen,
+                    hip,
 
-                right_forearm: rightForearm,
-                left_forearm: leftForearm,
+                    right_arm: rightArm,
+                    left_arm: leftArm,
 
-                right_thigh: rightThigh,
-                left_thigh: leftThigh,
+                    right_forearm: rightForearm,
+                    left_forearm: leftForearm,
 
-                right_calf: rightCalf,
-                left_calf: leftCalf,
+                    right_thigh: rightThigh,
+                    left_thigh: leftThigh,
 
-                observations,
-              },
-              frontPhoto,
-              sidePhoto,
-              backPhoto
-            )
-          }
-            className="cursor-pointer px-5 py-3 rounded-xl bg-green-400 text-slate-950 font-bold"
+                    right_calf: rightCalf,
+                    left_calf: leftCalf,
+
+                    observations,
+                  },
+                  frontPhoto,
+                  sidePhoto,
+                  backPhoto
+                );
+              } finally {
+                setSaving(false);
+              }
+            }}
+            className="cursor-pointer px-5 py-3 rounded-xl bg-green-400 text-slate-950 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Salvar
+            {saving ? "Salvando..." : "Salvar"}
           </button>
 
         </div>

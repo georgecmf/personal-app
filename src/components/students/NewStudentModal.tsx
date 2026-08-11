@@ -4,7 +4,7 @@ type Student = {
   id: number;
   name: string;
   goal: string;
-  plan: string;
+  attendance_type: string;
   phone: string;
   email: string;
   birth_date: string;
@@ -29,7 +29,7 @@ function NewStudentModal({
 }: Props) {
   const [name, setName] = useState("");
   const [goal, setGoal] = useState("");
-  const [plan, setPlan] = useState("Basic");
+  const [attendanceType, setAttendanceType] = useState("Presencial");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -44,7 +44,7 @@ function NewStudentModal({
     if (editingStudent) {
       setName(editingStudent.name);
       setGoal(editingStudent.goal);
-      setPlan(editingStudent.plan);
+      setAttendanceType(editingStudent.attendance_type);
 
       setPhone(editingStudent.phone);
       setEmail(editingStudent.email);
@@ -56,7 +56,7 @@ function NewStudentModal({
     } else {
       setName("");
       setGoal("");
-      setPlan("Basic");
+      setAttendanceType("Presencial");
       setPhone("");
       setEmail("");
       setBirthDate("");
@@ -77,7 +77,7 @@ function NewStudentModal({
       id: editingStudent?.id ?? 0,
       name,
       goal,
-      plan,
+      attendance_type: attendanceType,
       phone,
       email,
       birth_date: birthDate,
@@ -187,12 +187,12 @@ function NewStudentModal({
           </select>
 
           <select
-            value={plan}
-            onChange={(e) => setPlan(e.target.value)}
+            value={attendanceType}
+            onChange={(e) => setAttendanceType(e.target.value)}
             className="bg-slate-800 p-4 rounded-xl outline-none"
           >
-            <option value="Basic">Basic</option>
-            <option value="Premium">Premium</option>
+            <option value="Presencial">Presencial</option>
+            <option value="Online">Online</option>
           </select>
 
           <textarea

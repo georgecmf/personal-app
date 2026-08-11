@@ -199,9 +199,7 @@ const sortedAssessments = [...assessments].sort((a, b) => {
               className="bg-slate-900 border border-slate-800 rounded-2xl p-6"
             >
               <h2 className="text-2xl font-bold">
-                {new Date(
-                  assessment.assessment_date
-                ).toLocaleDateString("pt-BR")}
+                {assessment.assessment_date.split("-").reverse().join("/")}
               </h2>
 
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-6">

@@ -22,7 +22,7 @@ type Student = {
   id: number;
   name: string;
   goal: string;
-  plan: string;
+  attendance_type: string;
   phone: string;
   email: string;
   birth_date: string;
@@ -47,10 +47,13 @@ function Students() {
 
   const [search, setSearch] = useState("");
 
+  const [accessCode, setAccessCode] = useState<string | null>(null);
+
   const loadStudents = useCallback(async () => {
   if (!user) return;
 
   const data = await getStudents(user.id);
+
 
   setStudents(data || []);
 }, [user]);
@@ -74,7 +77,7 @@ function Students() {
       await updateStudent(editingStudent.id, {
         name: student.name,
         goal: student.goal,
-        plan: student.plan,
+        attendance_type: student.attendance_type,
         phone: student.phone,
         email: student.email,
         birth_date: student.birth_date,
@@ -87,7 +90,7 @@ function Students() {
       await createStudent({
         name: student.name,
         goal: student.goal,
-        plan: student.plan,
+        attendance_type: student.attendance_type,
         phone: student.phone,
         email: student.email,
         birth_date: student.birth_date,
@@ -122,9 +125,7 @@ function Students() {
       user!.id
     );
 
-    alert(
-      `Código de acesso do aluno ${student.name}:\n\n${account.access_code}`
-    );
+    setAccessCode(account.access_code);
   } catch (error) {
     console.error(error);
     alert("Não foi possível gerar o acesso.");
@@ -175,22 +176,23 @@ function Students() {
           Total de alunos: {filteredStudents.length}
         </p>
 
+        <div className="overflow-x-auto">
         <table className="w-full table-fixed">
           <thead className="bg-slate-800">
             <tr>
-              <th className="text-left p-5">
+              <th className="p-2 sm:p-5">
                 Nome
               </th>
 
-              <th className="text-left p-5">
+              <th className="p-2 sm:p-5 text-slate-400">
                 Objetivo
               </th>
 
-              <th className="text-left p-5">
-                Plano
+              <th className="p-2 sm:p-5">
+                Atendimento
               </th>
 
-              <th className="text-left p-5">
+              <th className="p-2 sm:p-5">
                 Ações
               </th>
             </tr>
@@ -203,7 +205,7 @@ function Students() {
                 className="border-t border-slate-800 hover:bg-slate-800/40 transition"
               >
                 <td
-                  className="p-5 cursor-pointer hover:text-green-400"
+                  className="p-2 sm:p-5 cursor-pointer hover:text-green-400"
                   onClick={() =>
                     navigate(`/students/${student.id}`)
                   }
@@ -211,17 +213,17 @@ function Students() {
                   {student.name}
                 </td>
 
-                <td className="p-5 text-slate-400">
+                <td className="p-2 sm:p-5 text-slate-400">
                   {student.goal}
                 </td>
 
-                <td className="p-5">
+                <td className="p-2 sm:p-5">
                   <Badge>
-                    {student.plan}
+                    {student.attendance_type}
                   </Badge>
                 </td>
 
-                <td className="p-5">
+                <td className="p-2 sm:p-5">
                   <div className="flex items-center gap-3 flex-wrap">
                     <button
                       onClick={() =>
@@ -279,7 +281,51 @@ function Students() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
+
+      {accessCode && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md">
+            <h2 className="text-2xl font-bold mb-2">
+              Acesso do aluno
+            </h2>
+
+            <p className="text-slate-400 mb-5">
+              Código de acesso gerado com sucesso.
+            </p>
+
+            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 mb-5">
+              <p className="text-xs text-slate-500 mb-1">
+                Código
+              </p>
+
+              <p className="text-2xl font-bold text-green-400 break-all">
+                {accessCode}
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setAccessCode(null)}
+                className="cursor-pointer px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 transition"
+              >
+                Fechar
+              </button>
+
+              <button
+                onClick={async () => {
+                  await navigator.clipboard.writeText(accessCode);
+                  alert("Código copiado!");
+                }}
+                className="cursor-pointer px-4 py-2 rounded-xl bg-green-400 text-slate-950 font-bold hover:opacity-90 transition"
+              >
+                Copiar código
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <NewStudentModal
         open={openModal}
