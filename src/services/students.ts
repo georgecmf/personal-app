@@ -114,6 +114,27 @@ export async function updateStudent(
   return data;
 }
 
+export async function updateStudentPhoto(
+  id: number,
+  photoUrl: string
+) {
+  const { data, error } = await supabase
+    .from("students")
+    .update({
+      photo_url: photoUrl,
+    })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}
+
 export async function getStudentById(
   id: number,
   userId: string
@@ -135,12 +156,10 @@ export async function getStudentById(
 
 export async function uploadStudentPhoto(
   file: File,
-  studentId: number,
-  userId: string
+  studentId: number
 ) {
   const fileExt = file.name.split(".").pop();
-
-  const fileName = `${userId}/${studentId}.${fileExt}`;
+  const fileName = `${studentId}.${fileExt}`;
 
   const { error } = await supabase.storage
     .from("students")

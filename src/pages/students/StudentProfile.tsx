@@ -5,7 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 import {
   getStudentById,
   uploadStudentPhoto,
-  updateStudent,
+  updateStudentPhoto,
 } from "../../services/students";
 
 import type { Student } from "../../services/students";
@@ -34,31 +34,43 @@ function StudentProfile() {
   }, [studentId, user]);
 
    async function handlePhoto(
-      e: React.ChangeEvent<HTMLInputElement>
-    ) {
-      if (!e.target.files?.length || !student || !user) return;
+  e: React.ChangeEvent<HTMLInputElement>
+) {
+  if (!e.target.files?.length || !student || !user) return;
 
-    const file = e.target.files[0];
+  const file = e.target.files[0];
 
-    const url = await uploadStudentPhoto(
-      file,
-      student.id!,
-      user!.id
-    );
+  const url = await uploadStudentPhoto(
+    file,
+    student.id!
+  );
 
-    if (!url) return;
+  console.log("URL DA FOTO:", url);
 
-    await updateStudent(student.id!, {
-      ...student,
-      photo_url: url,
-    });
-
-    setStudent({
-      ...student,
-      photo_url: url,
-    });
+  if (!url) {
+    alert("Erro ao enviar a foto.");
+    return;
   }
 
+  const updated = await updateStudentPhoto(
+    student.id!,
+    url
+  );
+
+  console.log("ALUNO ATUALIZADO:", updated);
+
+  if (!updated) {
+    alert(
+      "A foto foi enviada, mas não foi possível salvar no aluno."
+    );
+    return;
+  }
+
+  setStudent({
+    ...student,
+    photo_url: url,
+  });
+}
   if (!student) {
 
     return (

@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { ClipboardList, Plus, Trash2 } from "lucide-react";
-import { 
+import {
+  ClipboardList,
+  ClipboardCheck,
+  Plus,
+  Trash2,
+} from "lucide-react";
+import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
@@ -13,6 +18,8 @@ import {
   getStudents,
   updateStudent,
   createStudentAccess,
+  uploadStudentPhoto,
+  updateStudentPhoto,
 } from "../../services/students";
 
 import type { Student } from "../../services/students";
@@ -38,27 +45,25 @@ function Students() {
   const [accessCode, setAccessCode] = useState<string | null>(null);
 
   const loadStudents = useCallback(async () => {
-  if (!user) return;
+    if (!user) return;
 
-  const data = await getStudents(user.id);
+    const data = await getStudents(user.id);
 
-
-  setStudents(data || []);
-}, [user]);
-
-  useEffect(() => {
-  loadStudents();
-}, [loadStudents]);
+    setStudents(data || []);
+  }, [user]);
 
   useEffect(() => {
-  if (searchParams.get("new") === "true") {
-    setEditingStudent(null);
-    setOpenModal(true);
+    loadStudents();
+  }, [loadStudents]);
 
-    navigate("/students", { replace: true });
+  useEffect(() => {
+    if (searchParams.get("new") === "true") {
+      setEditingStudent(null);
+      setOpenModal(true);
 
-  }
-}, [searchParams, navigate]);
+      navigate("/students", { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   async function addStudent(student: Student) {
     if (editingStudent) {
@@ -106,25 +111,64 @@ function Students() {
     setOpenModal(true);
   }
 
-  async function handleCreateAccess(student: Student) {
-  try {
-    const account = await createStudentAccess(
-      student.id!,
-      user!.id
+  async function handlePhoto(
+    e: React.ChangeEvent<HTMLInputElement>,
+    student: Student
+  ) {
+    if (!e.target.files?.length || !student.id) return;
+
+    const file = e.target.files[0];
+
+    const url = await uploadStudentPhoto(
+      file,
+      student.id
     );
 
-    setAccessCode(account.access_code);
-  } catch (error) {
-    console.error(error);
-    alert("Não foi possível gerar o acesso.");
+    console.log("URL DA FOTO:", url);
+
+    if (!url) {
+      alert("Erro ao enviar a foto.");
+      return;
+    }
+
+    const updated = await updateStudentPhoto(
+      student.id,
+      url
+    );
+
+    console.log("ALUNO ATUALIZADO:", updated);
+
+    if (!updated) {
+      alert(
+        "A foto foi enviada, mas não foi possível salvar no aluno."
+      );
+      return;
+    }
+
+    await loadStudents();
+
+    e.target.value = "";
   }
-}
+
+  async function handleCreateAccess(student: Student) {
+    try {
+      const account = await createStudentAccess(
+        student.id!,
+        user!.id
+      );
+
+      setAccessCode(account.access_code);
+    } catch (error) {
+      console.error(error);
+      alert("Não foi possível gerar o acesso.");
+    }
+  }
 
   const filteredStudents = students.filter((student) =>
-  student.name
-    .toLowerCase()
-    .includes(search.toLowerCase())
-);
+    student.name
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
 
   return (
     <div>
@@ -139,7 +183,7 @@ function Students() {
           </p>
         </div>
 
-       <Button
+        <Button
           icon={<Plus size={20} />}
           onClick={() => {
             setEditingStudent(null);
@@ -151,7 +195,6 @@ function Students() {
       </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-6">
-
         <input
           type="text"
           placeholder="Buscar aluno pelo nome..."
@@ -165,110 +208,155 @@ function Students() {
         </p>
 
         <div className="overflow-x-auto">
-        <table className="w-full table-fixed">
-          <thead className="bg-slate-800">
-            <tr>
-              <th className="p-2 sm:p-5">
-                Nome
-              </th>
-
-              <th className="p-2 sm:p-5 text-slate-400">
-                Objetivo
-              </th>
-
-              <th className="p-2 sm:p-5">
-                Atendimento
-              </th>
-
-              <th className="p-2 sm:p-5">
-                Ações
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-             {filteredStudents.map((student) => (
-              <tr
-                key={student.id}
-                className="border-t border-slate-800 hover:bg-slate-800/40 transition"
-              >
-                <td
-                  className="p-2 sm:p-5 cursor-pointer hover:text-green-400"
-                  onClick={() =>
-                    navigate(`/students/${student.id}`)
-                  }
-                >
-                  {student.name}
-                </td>
-
-                <td className="p-2 sm:p-5 text-slate-400">
-                  {student.goal}
-                </td>
-
-                <td className="p-2 sm:p-5">
-                  <Badge>
-                    {student.attendance_type}
-                  </Badge>
-                </td>
-
-                <td className="p-2 sm:p-5">
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <button
-                      onClick={() =>
-                        handleEditStudent(student)
-                      }
-                      className="cursor-pointer text-blue-400 hover:text-blue-300 transition"
-                      title="Editar aluno"
-                    >
-                      ✏️
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        navigate(
-                          `/students/${student.id}/workouts`
-                        )
-                      }
-                      className="cursor-pointer text-green-400 hover:text-green-300 transition"
-                      title="Treinos"
-                    >
-                      <ClipboardList size={20} />
-                    </button>
-
-                    <button
-                      onClick={() => handleCreateAccess(student)}
-                      className="cursor-pointer text-purple-400 hover:text-purple-300 transition"
-                      title="Gerar acesso do aluno"
-                    >
-                      🔑
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        deleteStudent(student.id!)
-                      }
-                      className="cursor-pointer text-red-400 hover:text-red-300 transition"
-                      title="Excluir aluno"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-
-            {filteredStudents.length === 0 && (
+          <table className="w-full table-fixed">
+            <thead className="bg-slate-800">
               <tr>
-                <td
-                  colSpan={4}
-                  className="p-8 text-center text-slate-500"
-                >
-                  Nenhum aluno encontrado.
-                </td>
+                <th className="p-2 sm:p-5">
+                  Nome
+                </th>
+
+                <th className="p-2 sm:p-5 text-slate-400">
+                  Objetivo
+                </th>
+
+                <th className="p-2 sm:p-5">
+                  Atendimento
+                </th>
+
+                <th className="p-2 sm:p-5">
+                  Ações
+                </th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {filteredStudents.map((student) => (
+                <tr
+                  key={student.id}
+                  className="border-t border-slate-800 hover:bg-slate-800/40 transition"
+                >
+                  <td
+                    className="p-2 sm:p-5 cursor-pointer hover:text-green-400"
+                    onClick={() =>
+                      navigate(`/students/${student.id}`)
+                    }
+                  >
+                    <div className="flex items-center gap-3">
+                      <label
+                        className="cursor-pointer shrink-0"
+                        title="Alterar foto"
+                        onClick={(e) =>
+                          e.stopPropagation()
+                        }
+                      >
+                        {student.photo_url ? (
+                          <img
+                            src={student.photo_url}
+                            alt={student.name}
+                            className="w-10 h-10 rounded-full object-cover hover:opacity-80 transition"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 text-xs hover:bg-slate-700 transition">
+                            —
+                          </div>
+                        )}
+
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) =>
+                            handlePhoto(e, student)
+                          }
+                        />
+                      </label>
+
+                      <span>{student.name}</span>
+                    </div>
+                  </td>
+
+                  <td className="p-2 sm:p-5 text-slate-400">
+                    {student.goal}
+                  </td>
+
+                  <td className="p-2 sm:p-5">
+                    <Badge>
+                      {student.attendance_type}
+                    </Badge>
+                  </td>
+
+                  <td className="p-2 sm:p-5">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <button
+                        onClick={() =>
+                          handleEditStudent(student)
+                        }
+                        className="cursor-pointer text-blue-400 hover:text-blue-300 transition"
+                        title="Editar aluno"
+                      >
+                        ✏️
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          navigate(
+                            `/students/${student.id}/workouts`
+                          )
+                        }
+                        className="cursor-pointer text-green-400 hover:text-green-300 transition"
+                        title="Treinos"
+                      >
+                        <ClipboardList size={20} />
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          navigate(
+                            `/students/${student.id}/assessments`
+                          )
+                        }
+                        className="cursor-pointer text-orange-400 hover:text-orange-300 transition"
+                        title="Avaliações"
+                      >
+                        <ClipboardCheck size={20} />
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          handleCreateAccess(student)
+                        }
+                        className="cursor-pointer text-purple-400 hover:text-purple-300 transition"
+                        title="Gerar acesso do aluno"
+                      >
+                        🔑
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          deleteStudent(student.id!)
+                        }
+                        className="cursor-pointer text-red-400 hover:text-red-300 transition"
+                        title="Excluir aluno"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {filteredStudents.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="p-8 text-center text-slate-500"
+                  >
+                    Nenhum aluno encontrado.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -303,7 +391,9 @@ function Students() {
 
               <button
                 onClick={async () => {
-                  await navigator.clipboard.writeText(accessCode);
+                  await navigator.clipboard.writeText(
+                    accessCode
+                  );
                   alert("Código copiado!");
                 }}
                 className="cursor-pointer px-4 py-2 rounded-xl bg-green-400 text-slate-950 font-bold hover:opacity-90 transition"
@@ -322,8 +412,7 @@ function Students() {
           setEditingStudent(null);
         }}
         onAddStudent={addStudent}
-         editingStudent={editingStudent}
-       
+        editingStudent={editingStudent}
       />
     </div>
   );

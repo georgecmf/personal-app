@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getStudentAccountByCode } from "../../services/students";
+import { supabase } from "../../services/supabase";
 
 function StudentLogin() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ function StudentLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleLogin(e: React.FormEvent) {
+ async function handleLogin(e: React.FormEvent) {
   e.preventDefault();
 
   setError("");
@@ -32,6 +33,27 @@ function StudentLogin() {
 
     if (!account) {
       setError("Código de acesso inválido.");
+      return;
+    }
+
+    const {
+      data: { session },
+      error: authError,
+    } = await supabase.auth.signInAnonymously();
+
+    console.log("SESSÃO SUPABASE:", session);
+    console.log("ERRO AUTENTICAÇÃO:", authError);
+
+    if (authError || !session) {
+      console.error(
+        "ERRO AO CRIAR SESSÃO ANÔNIMA:",
+        authError
+      );
+
+      setError(
+        "Não foi possível iniciar a sessão do aluno."
+      );
+
       return;
     }
 

@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getStudentByAccessCode } from "../../services/students";
+import { 
+  getStudentByAccessCode,
+  uploadStudentPhoto,
+  updateStudentPhoto,
+} from "../../services/students";
 
 type Student = {
   id: number;
@@ -10,6 +14,7 @@ type Student = {
   plan: string;
   height: number | null;
   weight: number | null;
+  photo_url?: string;
 };
 
 function StudentDashboard() {
@@ -17,6 +22,43 @@ function StudentDashboard() {
 
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
+
+  async function handlePhoto(
+  e: React.ChangeEvent<HTMLInputElement>
+) {
+  if (!e.target.files?.length || !student) return;
+
+  const file = e.target.files[0];
+
+  const url = await uploadStudentPhoto(
+  file,
+  student.id
+);
+
+console.log("URL DA FOTO:", url);
+
+if (!url) {
+  alert("Erro ao enviar a foto.");
+  return;
+}
+
+const updated = await updateStudentPhoto(
+  student.id,
+  url
+);
+
+console.log("ALUNO ATUALIZADO:", updated);
+
+if (!updated) {
+  alert("A foto foi enviada, mas não foi possível salvar no aluno.");
+  return;
+}
+
+setStudent({
+  ...student,
+  photo_url: url,
+});
+}
 
   useEffect(() => {
     async function loadStudent() {
@@ -67,14 +109,41 @@ function StudentDashboard() {
         {/* Cabeçalho */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
-        <div>
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center gap-2">
+            {student.photo_url ? (
+              <img
+                src={student.photo_url}
+                alt={student.name}
+                className="w-16 h-16 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center text-slate-500">
+                👤
+              </div>
+            )}
+
+            <label className="cursor-pointer text-sm text-green-400 hover:text-green-300">
+              Alterar foto
+
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handlePhoto}
+              />
+            </label>
+          </div>
+
+          <div>
             <h1 className="text-2xl sm:text-3xl font-bold">
-            Olá, {student.name}! 👋
+              Olá, {student.name}! 👋
             </h1>
 
             <p className="text-slate-400 mt-2">
-            Bem-vindo à sua área no FitPro.
+              Bem-vindo à sua área no FitPro.
             </p>
+          </div>
         </div>
 
         <button
