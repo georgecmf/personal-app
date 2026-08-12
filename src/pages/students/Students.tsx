@@ -15,22 +15,10 @@ import {
   createStudentAccess,
 } from "../../services/students";
 
+import type { Student } from "../../services/students";
+
 import Button from "../../components/ui/Button";
 import Badge from "../../components/ui/Badge";
-
-type Student = {
-  id: number;
-  name: string;
-  goal: string;
-  attendance_type: string;
-  phone: string;
-  email: string;
-  birth_date: string;
-  gender: string;
-  height: string;
-  weight: string;
-  notes: string;
-};
 
 function Students() {
   const { user } = useAuth();
@@ -74,7 +62,7 @@ function Students() {
 
   async function addStudent(student: Student) {
     if (editingStudent) {
-      await updateStudent(editingStudent.id, {
+      await updateStudent(editingStudent.id!, {
         name: student.name,
         goal: student.goal,
         attendance_type: student.attendance_type,
@@ -121,7 +109,7 @@ function Students() {
   async function handleCreateAccess(student: Student) {
   try {
     const account = await createStudentAccess(
-      student.id,
+      student.id!,
       user!.id
     );
 
@@ -257,7 +245,7 @@ function Students() {
 
                     <button
                       onClick={() =>
-                        deleteStudent(student.id)
+                        deleteStudent(student.id!)
                       }
                       className="cursor-pointer text-red-400 hover:text-red-300 transition"
                       title="Excluir aluno"
@@ -334,7 +322,8 @@ function Students() {
           setEditingStudent(null);
         }}
         onAddStudent={addStudent}
-        editingStudent={editingStudent}
+         editingStudent={editingStudent}
+       
       />
     </div>
   );

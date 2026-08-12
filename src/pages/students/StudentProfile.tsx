@@ -8,21 +8,8 @@ import {
   updateStudent,
 } from "../../services/students";
 
-type Student = {
-  id: number;
-  name: string;
-  goal: string;
-  plan: string;
+import type { Student } from "../../services/students";
 
-  phone: string;
-  email: string;
-  birth_date: string;
-  gender: string;
-  height: string;
-  weight: string;
-  notes: string;
-  photo_url?: string;
-};
 
 function StudentProfile() {
   const { studentId } = useParams();
@@ -55,13 +42,13 @@ function StudentProfile() {
 
     const url = await uploadStudentPhoto(
       file,
-      student.id,
+      student.id!,
       user!.id
     );
 
     if (!url) return;
 
-    await updateStudent(student.id, {
+    await updateStudent(student.id!, {
       ...student,
       photo_url: url,
     });
@@ -175,8 +162,8 @@ function StudentProfile() {
           </div>
 
           <div>
-            <p className="text-slate-500">Plano</p>
-            <p>{student.plan}</p>
+            <p className="text-slate-500">Atendimento</p>
+            <p>{student.attendance_type || "-"}</p>
           </div>
 
         </div>

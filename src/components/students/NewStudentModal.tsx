@@ -1,18 +1,6 @@
 import { useEffect, useState } from "react";
+import type { Student } from "../../services/students";
 
-type Student = {
-  id: number;
-  name: string;
-  goal: string;
-  attendance_type: string;
-  phone: string;
-  email: string;
-  birth_date: string;
-  gender: string;
-  height: string;
-  weight: string;
-  notes: string;
-};
 
 type Props = {
   open: boolean;

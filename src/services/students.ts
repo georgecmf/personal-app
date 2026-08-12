@@ -4,7 +4,7 @@ export interface Student {
   id?: number;
   name: string;
   goal: string;
-  plan: string;
+  attendance_type: string;
 
   phone: string;
   email: string;
@@ -45,7 +45,7 @@ export async function createStudent(student: Student) {
     .insert({
       name: student.name,
       goal: student.goal,
-      plan: student.plan,
+      attendance_type: student.attendance_type,
 
       phone: student.phone,
       email: student.email,
@@ -91,7 +91,7 @@ export async function updateStudent(
       .update({
         name: student.name,
         goal: student.goal,
-        plan: student.plan,
+        attendance_type: student.attendance_type,
 
         phone: student.phone,
         email: student.email,
