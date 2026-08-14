@@ -42,7 +42,8 @@ function StudentProfile() {
 
   const url = await uploadStudentPhoto(
     file,
-    student.id!
+    student.id!,
+    user!.id
   );
 
   console.log("URL DA FOTO:", url);

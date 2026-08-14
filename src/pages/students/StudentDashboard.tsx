@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { 
+import {
   getStudentByAccessCode,
-  uploadStudentPhoto,
-  updateStudentPhoto,
 } from "../../services/students";
+
+import { supabase } from "../../services/supabase";
 
 type Student = {
   id: number;
@@ -15,6 +15,7 @@ type Student = {
   height: number | null;
   weight: number | null;
   photo_url?: string;
+  user_id?: string;
 };
 
 function StudentDashboard() {
@@ -30,34 +31,49 @@ function StudentDashboard() {
 
   const file = e.target.files[0];
 
-  const url = await uploadStudentPhoto(
-  file,
-  student.id
-);
+  const accessCode =
+    sessionStorage.getItem("student_access_code");
 
-console.log("URL DA FOTO:", url);
+  if (!accessCode) {
+    alert("Código de acesso não encontrado.");
+    return;
+  }
 
-if (!url) {
-  alert("Erro ao enviar a foto.");
-  return;
-}
+  try {
+    const formData = new FormData();
 
-const updated = await updateStudentPhoto(
-  student.id,
-  url
-);
+    formData.append("file", file);
+    formData.append("access_code", accessCode);
 
-console.log("ALUNO ATUALIZADO:", updated);
+    const { data, error } =
+      await supabase.functions.invoke(
+        "upload-student-photo",
+        {
+          body: formData,
+        }
+      );
 
-if (!updated) {
-  alert("A foto foi enviada, mas não foi possível salvar no aluno.");
-  return;
-}
+    console.log("RESPOSTA DO UPLOAD:", data);
+    console.log("ERRO DO UPLOAD:", error);
 
-setStudent({
-  ...student,
-  photo_url: url,
-});
+    if (error || !data?.photo_url) {
+      alert(
+        data?.error ||
+          "Não foi possível enviar a foto."
+      );
+      return;
+    }
+
+    setStudent({
+      ...student,
+      photo_url: data.photo_url,
+    });
+
+    e.target.value = "";
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao enviar a foto.");
+  }
 }
 
   useEffect(() => {
@@ -70,8 +86,10 @@ setStudent({
         return;
       }
 
-      const data =
+     const data =
         await getStudentByAccessCode(accessCode);
+
+      console.log("ALUNO CARREGADO NO DASHBOARD:", data);
 
       if (!data) {
         console.error("Aluno não encontrado");
@@ -148,10 +166,10 @@ setStudent({
 
         <button
             onClick={() => {
-            sessionStorage.removeItem("student_id");
-            sessionStorage.removeItem("student_access_code");
+              sessionStorage.removeItem("student_id");
+              sessionStorage.removeItem("student_access_code");
 
-            navigate("/login", { replace: true });
+              navigate("/student-login", { replace: true });
             }}
             className="cursor-pointer w-fit border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition"
         >

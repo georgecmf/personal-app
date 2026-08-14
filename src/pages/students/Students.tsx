@@ -4,6 +4,7 @@ import {
   ClipboardCheck,
   Plus,
   Trash2,
+  Power,
 } from "lucide-react";
 import {
   useNavigate,
@@ -18,6 +19,9 @@ import {
   getStudents,
   updateStudent,
   createStudentAccess,
+  getStudentAccessCode,
+  getStudentAccessStatus,
+  toggleStudentAccess,
   uploadStudentPhoto,
   updateStudentPhoto,
 } from "../../services/students";
@@ -121,7 +125,8 @@ function Students() {
 
     const url = await uploadStudentPhoto(
       file,
-      student.id
+      student.id,
+      user!.id
     );
 
     console.log("URL DA FOTO:", url);
@@ -152,6 +157,16 @@ function Students() {
 
   async function handleCreateAccess(student: Student) {
     try {
+      const existingCode = await getStudentAccessCode(
+        student.id!,
+        user!.id
+      );
+
+      if (existingCode) {
+        setAccessCode(existingCode);
+        return;
+      }
+
       const account = await createStudentAccess(
         student.id!,
         user!.id
@@ -163,6 +178,68 @@ function Students() {
       alert("Não foi possível gerar o acesso.");
     }
   }
+
+  async function handleToggleAccess(student: Student) {
+  if (!student.id || !user) return;
+
+  try {
+    const existingCode = await getStudentAccessCode(
+      student.id,
+      user.id
+    );
+
+    if (!existingCode) {
+      alert(
+        "Este aluno ainda não possui um código de acesso."
+      );
+      return;
+    }
+
+    const currentAccess = await getStudentAccessStatus(
+      student.id,
+      user.id
+    );
+
+    if (currentAccess === null) {
+      alert(
+        "Não foi possível verificar o acesso do aluno."
+      );
+      return;
+    }
+
+    const isCurrentlyActive = currentAccess === false;
+
+    const confirmed = window.confirm(
+      isCurrentlyActive
+        ? "Desativar o acesso deste aluno?"
+        : "Ativar o acesso deste aluno?"
+    );
+
+    if (!confirmed) return;
+
+   const result = await toggleStudentAccess(
+      student.id,
+      user.id,
+      isCurrentlyActive
+    );
+
+    if (!result) {
+      alert(
+        "Não foi possível alterar o acesso do aluno."
+      );
+      return;
+    }
+
+    await loadStudents();
+
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "Não foi possível alterar o acesso do aluno."
+    );
+  }
+}
 
   const filteredStudents = students.filter((student) =>
     student.name
@@ -208,22 +285,28 @@ function Students() {
         </p>
 
         <div className="overflow-x-auto">
-          <table className="w-full table-fixed">
+          <table className="w-full min-w-[800px]">
+            <colgroup>
+            <col className="w-[260px]" />
+            <col className="w-[220px]" />
+            <col className="w-[180px]" />
+            <col className="w-[260px]" />
+          </colgroup>
             <thead className="bg-slate-800">
               <tr>
-                <th className="p-2 sm:p-5">
+                <th className="p-2 sm:p-5 text-left">
                   Nome
                 </th>
 
-                <th className="p-2 sm:p-5 text-slate-400">
+                <th className="p-2 sm:p-5 text-left text-slate-400">
                   Objetivo
                 </th>
 
-                <th className="p-2 sm:p-5">
+                <th className="p-2 sm:p-5 text-left">
                   Atendimento
                 </th>
 
-                <th className="p-2 sm:p-5">
+                <th className="p-2 sm:p-5 text-left">
                   Ações
                 </th>
               </tr>
@@ -285,8 +368,8 @@ function Students() {
                     </Badge>
                   </td>
 
-                  <td className="p-2 sm:p-5">
-                    <div className="flex items-center gap-3 flex-wrap">
+                  <td className="p-2 sm:p-5 whitespace-nowrap">
+                    <div className="flex items-center gap-4">
                       <button
                         onClick={() =>
                           handleEditStudent(student)
@@ -339,6 +422,22 @@ function Students() {
                         title="Excluir aluno"
                       >
                         <Trash2 size={20} />
+                      </button>
+
+                      <button
+                        onClick={() => handleToggleAccess(student)}
+                        className={`cursor-pointer transition ${
+                          student.access_active
+                            ? "text-green-400 hover:text-green-300"
+                            : "text-red-400 hover:text-red-300"
+                        }`}
+                        title={
+                          student.access_active
+                            ? "Desativar acesso"
+                            : "Ativar acesso"
+                        }
+                      >
+                        <Power size={20} />
                       </button>
                     </div>
                   </td>
