@@ -11,7 +11,7 @@ type Student = {
   id: number;
   name: string;
   goal: string;
-  plan: string;
+  attendance_type: string;
   height: number | null;
   weight: number | null;
   photo_url?: string;
@@ -194,12 +194,12 @@ function StudentDashboard() {
 
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
             <p className="text-sm text-slate-400">
-              Plano
+              Atendimento
             </p>
 
             <p className="text-lg font-bold mt-2">
-              {student.plan || "-"}
-            </p>
+            {student.attendance_type || "-"}
+          </p>
           </div>
 
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
