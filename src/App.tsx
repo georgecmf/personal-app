@@ -82,6 +82,11 @@ function App() {
         />
 
         <Route
+          path="/"
+            element={<Navigate to="/login" replace />}
+          />
+        
+        <Route
           element={
             <PrivateRoute>
               <MainLayout />
@@ -89,7 +94,7 @@ function App() {
           }
         >
           <Route
-            path="/"
+            path="dashboard"
             element={<Dashboard />}
           />
             <Route
