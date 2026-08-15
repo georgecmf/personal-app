@@ -54,9 +54,7 @@ function StudentAssessments() {
         return;
       }
 
-      const data = await getAssessmentsForStudent(
-        Number(studentId)
-      );
+      const data = await getAssessmentsForStudent();
 
       setAssessments(data || []);
     }

@@ -284,8 +284,9 @@ function Students() {
           Total de alunos: {filteredStudents.length}
         </p>
 
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px]">
+        <div className="overflow-x-auto bg-slate-900 rounded-xl">
+          <div className="min-w-[800px] bg-slate-900">
+            <table className="w-full bg-slate-900">
             <colgroup>
             <col className="w-[260px]" />
             <col className="w-[220px]" />
@@ -456,6 +457,7 @@ function Students() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 

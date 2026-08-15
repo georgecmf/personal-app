@@ -103,16 +103,33 @@ export async function getAllExercises(
 export async function getExercisesForStudent(
   workoutId: number
 ) {
-  const { data, error } = await supabase
-    .from("exercises")
-    .select("*")
-    .eq("workout_id", workoutId)
-    .order("id");
+  const accessCode =
+    sessionStorage.getItem("student_access_code");
 
-  if (error) {
-    console.error(error);
+  if (!accessCode) {
+    console.error(
+      "Código de acesso do aluno não encontrado."
+    );
+
     return [];
   }
 
-  return data;
+  const { data, error } = await supabase.rpc(
+    "get_student_exercises_by_access_code",
+    {
+      p_access_code: accessCode,
+      p_workout_id: workoutId,
+    }
+  );
+
+  if (error) {
+    console.error(
+      "ERRO AO BUSCAR EXERCÍCIOS DO ALUNO:",
+      error
+    );
+
+    return [];
+  }
+
+  return data || [];
 }

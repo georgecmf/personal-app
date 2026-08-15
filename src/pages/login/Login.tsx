@@ -69,7 +69,12 @@ function Login() {
             Entrar como aluno
           </button>
 
-
+          <button
+            onClick={() => navigate("/register")}
+            className="cursor-pointer w-full border border-green-400 text-green-400 font-bold p-4 rounded-xl hover:bg-green-400 hover:text-slate-950 transition"
+          >
+            Criar conta de Personal
+          </button>
         </div>
       </div>
     </div>

@@ -23,9 +23,7 @@ function StudentWorkouts() {
         return;
       }
 
-      const data = await getWorkoutsForStudent(
-        Number(studentId)
-      );
+      const data = await getWorkoutsForStudent();
 
       setWorkouts(data || []);
       setLoading(false);
@@ -47,7 +45,11 @@ function StudentWorkouts() {
 
       <div className="mb-8">
         <button
-          onClick={() => navigate("/student/6")}
+          onClick={() =>
+            navigate(
+              `/student/${sessionStorage.getItem("student_id")}`
+            )
+          }
           className="text-slate-400 hover:text-white transition mb-4"
         >
           ← Voltar

@@ -95,19 +95,30 @@ export async function getAllWorkouts(
   return data;
 }
 
-export async function getWorkoutsForStudent(
-  studentId: number
-) {
-  const { data, error } = await supabase
-    .from("workouts")
-    .select("*")
-    .eq("student_id", studentId)
-    .order("id");
+export async function getWorkoutsForStudent() {
+  const accessCode =
+    sessionStorage.getItem("student_access_code");
 
-  if (error) {
-    console.error(error);
+  if (!accessCode) {
+    console.error("Código de acesso do aluno não encontrado.");
     return [];
   }
 
-  return data;
+  const { data, error } = await supabase.rpc(
+    "get_student_workouts_by_access_code",
+    {
+      p_access_code: accessCode,
+    }
+  );
+
+  if (error) {
+    console.error(
+      "ERRO AO BUSCAR TREINOS DO ALUNO:",
+      error
+    );
+
+    return [];
+  }
+
+  return data || [];
 }

@@ -153,21 +153,33 @@ export async function uploadAssessmentPhoto(
   return data.publicUrl;
 }
 
-export async function getAssessmentsForStudent(
-  studentId: number
-) {
-  const { data, error } = await supabase
-    .from("physical_assessments")
-    .select("*")
-    .eq("student_id", studentId)
-    .order("assessment_date", {
-      ascending: false,
-    });
+export async function getAssessmentsForStudent() {
+  const accessCode =
+    sessionStorage.getItem("student_access_code");
 
-  if (error) {
-    console.error(error);
+  if (!accessCode) {
+    console.error(
+      "Código de acesso do aluno não encontrado."
+    );
+
     return [];
   }
 
-  return data;
+  const { data, error } = await supabase.rpc(
+    "get_student_assessments_by_access_code",
+    {
+      p_access_code: accessCode,
+    }
+  );
+
+  if (error) {
+    console.error(
+      "ERRO AO BUSCAR AVALIAÇÕES DO ALUNO:",
+      error
+    );
+
+    return [];
+  }
+
+  return data || [];
 }
