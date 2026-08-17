@@ -25,11 +25,13 @@ import StudentAreaWorkouts from "./pages/students/StudentWorkouts";
 import StudentWorkoutExercises from "./pages/students/StudentWorkoutExercises";
 import StudentAreaAssessments from "./pages/students/StudentAssessments";
 import StudentRoute from "./routes/StudentRoute";
+import AndroidBackButton from "./components/AndroidBackButton";
 
 
 function App() {
   return (
     <BrowserRouter>
+      <AndroidBackButton />
       <Routes>
         <Route 
         path="/login" 

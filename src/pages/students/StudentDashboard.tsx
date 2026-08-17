@@ -169,7 +169,7 @@ function StudentDashboard() {
               sessionStorage.removeItem("student_id");
               sessionStorage.removeItem("student_access_code");
 
-              navigate("/student-login", { replace: true });
+              navigate("/login", { replace: true });
             }}
             className="cursor-pointer w-fit border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition"
         >
