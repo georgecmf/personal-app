@@ -30,12 +30,12 @@ export default defineConfig({
 
         icons: [
           {
-            src: "/fitpro-logo-192x192.png",
+            src: "/fitpro-192x192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "/fitpro-logo-512x512.png",
+            src: "/fitpro-512x512.png",
             sizes: "512x512",
             type: "image/png",
           },
