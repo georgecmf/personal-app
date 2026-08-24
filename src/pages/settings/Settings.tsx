@@ -68,7 +68,7 @@ function Settings() {
 
     alert("Perfil atualizado!");
 
-    navigate("/");
+    navigate("/dashboard");
   }
 
 

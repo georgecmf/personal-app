@@ -85,8 +85,12 @@ function App() {
 
         <Route
           path="/"
-            element={<Navigate to="/login" replace />}
-          />
+          element={
+            <PrivateRoute>
+              <Navigate to="/dashboard" replace />
+            </PrivateRoute>
+          }
+        />
         
         <Route
           element={
@@ -141,7 +145,7 @@ function App() {
 
               <Route
               path="*"
-              element={<Navigate to="/" />}
+              element={<Navigate to="/dashboard" />}
             />
 
           </Route>
